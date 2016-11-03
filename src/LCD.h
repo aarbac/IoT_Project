@@ -2,6 +2,7 @@
 #define HEADER_LCD
 
 void LCD_init_fn(void);
-void LCD_write(char *string);
+void LCD_write_string(char *string);
+void LCD_write_number(int number);
 
 #endif

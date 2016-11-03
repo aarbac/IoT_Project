@@ -53,13 +53,13 @@ void LCD_write_string(char *string)
 	LCD_ContrastSet(0x1A);
 }
 
-void LCD_write_number(int number)
+void LCD_write_number(int number_val)
 {
 	/* Initialize LCD controller without boost. */
 	SegmentLCD_Init(false);
 
 	/* Write something to text field on LCD display. */
-	SegmentLCD_Number(number);
+	SegmentLCD_Number(number_val);
 
 	/* Configure Animation. */
 	LCD_init_fn();
