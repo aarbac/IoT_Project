@@ -42,7 +42,6 @@ unsigned int GPIO_Init(sleepstatemode_enum EMx)
 	GPIO_DriveModeSet(LED_pin_port, gpioDriveModeLowest);
 	GPIO_DriveModeSet(Light_Excite_port, gpioDriveModeLowest);
 
-
 	GPIO_PinModeSet(LEUART0_port, LEUART0_TX_pin_number, gpioModePushPull, 1);
 	GPIO_PinModeSet(LEUART0_port, LEUART0_RX_pin_number, gpioModePushPull, 1);
 

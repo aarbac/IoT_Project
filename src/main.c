@@ -33,6 +33,7 @@
 #include "em_dma.h"
 #include "em_i2c.h"
 #include "em_leuart.h"
+#include "em_lesense.h"
 #include "dmactrl.h"
 
 #include "sleep.h"
@@ -49,6 +50,10 @@
 #include "tsl2651.h"
 #include "leuart.h"
 #include "LCD.h"
+#include "captouch.h"
+#include "tests.h"
+
+extern unsigned int test_flag;
 
 /******************************************************************************
  * @brief  Main function
@@ -66,6 +71,7 @@ int main(void)
 		err_code = LETimer_Calibrate();
 	}
 #endif
+
 	if(ENERGY_MODE == EM3)
 	{
 		err_code = Clock_Init(ENERGY_MODE);
@@ -74,6 +80,7 @@ int main(void)
 		err_code = ACMP_Init_fn();
 #endif
 		LCD_init_fn();
+		capsense_main();
 		//err_code = i2c_init_fn();
 		err_code = adc_init_fn();
 		err_code = dma_init_fn();
@@ -87,13 +94,39 @@ int main(void)
 #ifdef ENABLE_ON_BOARD_LIGHT_SENSOR
 		err_code = ACMP_Init_fn();
 #endif
-		LCD_write_number(32);
+
+		capsense_main();
 		//err_code = i2c_init_fn();
 		err_code = adc_init_fn();
 		err_code = dma_init_fn();
 		//err_code = leuart_init_fn();
 		err_code = LETimer0_Init(ENERGY_MODE);
 	}
+
+#ifdef TESTS_ON
+	test_flag = 1;
+	err_code = test_LCD();
+	if(err_code == 0)
+	{
+		err_code = test_led(LOW);
+	}
+	if(err_code == 0)
+	{
+		err_code = test_led(MEDIUM);
+	}
+	if(err_code == 0)
+	{
+		err_code = test_led(HIGH);
+	}
+	if(err_code == 0)
+	{
+		err_code = test_LESENSE_captouch();
+	}
+	if(err_code == 0)
+	{
+		test_flag = 0;
+	}
+#endif
 
 	/* Infinite loop */
 	while (1)

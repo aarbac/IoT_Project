@@ -9,6 +9,7 @@ uint16_t LETOUCH_GetChannelsTouched(void);
 uint16_t LETOUCH_GetChannelMaxValue(uint8_t channel);
 uint16_t LETOUCH_GetChannelMinValue(uint8_t channel);
 void LETOUCH_Calibration(void);
+void capsense_main(void);
 
 /** Scan frequency for LESENSE, how often all the pads are scanned. */
 #define LESENSE_SCAN_FREQUENCY          5
@@ -23,13 +24,8 @@ void LETOUCH_Calibration(void);
 /** Number of calibration events used to calculate threshold. */
 #define NUMBER_OF_CALIBRATION_VALUES    10
 
-/** Interval between calibration, in seconds. */
-#define CALIBRATION_INTERVAL            5
-
 #define NUM_LESENSE_CHANNELS    16
 
 #define LESENSE_CH_PORT         gpioPortC
-
-
 
 #endif

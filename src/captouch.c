@@ -1,4 +1,7 @@
 #include "captouch.h"
+#include "main.h"
+#include "GPIO.h"
+#include "rtc.h"
 
 #include "em_int.h"
 #include "em_cmu.h"
@@ -6,6 +9,7 @@
 #include "em_acmp.h"
 #include "em_gpio.h"
 #include "em_lesense.h"
+#include "em_rtc.h"
 
 static volatile uint16_t calibration_value[NUM_LESENSE_CHANNELS][NUMBER_OF_CALIBRATION_VALUES];
 static volatile uint16_t buttons_pressed;
@@ -20,7 +24,6 @@ static float channel_threshold_percent[NUM_LESENSE_CHANNELS];
 static void LETOUCH_setupACMP(void);
 static void LETOUCH_setupLESENSE(void);
 static void LETOUCH_setupGPIO(void);
-//static void LETOUCH_setupRTC(void);
 static void LETOUCH_setupCMU(void);
 
 static uint16_t GetMaxValue(volatile uint16_t* A, uint16_t N);
@@ -37,14 +40,16 @@ void LETOUCH_Init(float sensitivity[])
   /* Uses the sensitivity array to deduce which channels to enable and how */
   /* many channels that are enabled */
 
-  for(i = 0; i < NUM_LESENSE_CHANNELS; i++){
+  for(i = 0; i < NUM_LESENSE_CHANNELS; i++)
+  {
 
     /* Init min and max values for each channel */
     channel_max_value[i] = 0;
     channel_min_value[i] = 0xffff;
 
     /* Add to channels used mask if sensitivity is not zero */
-    if(sensitivity[i] != 0.0){
+    if(sensitivity[i] != 0.0)
+    {
       channel_threshold_percent[i] = sensitivity[i];
       channels_used_mask |= (1 << i);
       num_channels_used++;
@@ -64,11 +69,13 @@ void LETOUCH_Init(float sensitivity[])
   LETOUCH_setupLESENSE();
   /* Do initial calibration "N_calibration_values * 10" times to make sure */
   /* it settles on values after potential startup transients */
-  for(i = 0; i < NUMBER_OF_CALIBRATION_VALUES * 10; i++){
+  for(i = 0; i < NUMBER_OF_CALIBRATION_VALUES * 10; i++)
+  {
     LESENSE_ScanStart();
     LETOUCH_Calibration();
   }
-
+  /* Setup RTC for calibration interrupt */
+  LETOUCH_setupRTC();
   /* Initialization done, enable interrupts globally. */
   INT_Enable();
 
@@ -228,8 +235,10 @@ static void LETOUCH_setupLESENSE( void )
   LESENSE_Init(&initLesense, true);
 
   /* Configure channels */
-  for(i = 0; i < NUM_LESENSE_CHANNELS; i++){
-    if((channels_used_mask >> i) & 0x1){
+  for(i = 0; i < NUM_LESENSE_CHANNELS; i++)
+  {
+    if((channels_used_mask >> i) & 0x1)
+    {
       LESENSE_ChannelConfig(&initLesenseCh, i);
     }
   }
@@ -252,14 +261,17 @@ static void LETOUCH_setupGPIO( void )
   unsigned int i;
 
   /* Set GPIO pin mode to disabled for all active pins */
-  for(i = 0; i < NUM_LESENSE_CHANNELS; i++){
-    if((channels_used_mask >> i) & 0x1){
+  for(i = 0; i < NUM_LESENSE_CHANNELS; i++)
+  {
+    if((channels_used_mask >> i) & 0x1)
+    {
       GPIO_PinModeSet(LESENSE_CH_PORT, i, gpioModeDisabled, 0);
     }
   }
 }
 
-void LETOUCH_Calibration( void ){
+void LETOUCH_Calibration( void )
+{
   int i,k;
   uint16_t nominal_count;
   static uint8_t calibration_value_index = 0;
@@ -271,16 +283,20 @@ void LETOUCH_Calibration( void ){
   k = ((LESENSE->PTR & _LESENSE_PTR_WR_MASK) >> _LESENSE_PTR_WR_SHIFT);
 
   /* Handle circular buffer wraparound */
-  if(k >= num_channels_used){
+  if(k >= num_channels_used)
+  {
     k = k - num_channels_used;
   }
-  else{
+  else
+  {
     k = k - num_channels_used + NUM_LESENSE_CHANNELS;
   }
 
   /* Fill calibration values array with buffer values */
-  for(i = 0; i < NUM_LESENSE_CHANNELS; i++){
-    if((channels_used_mask >> i) & 0x1){
+  for(i = 0; i < NUM_LESENSE_CHANNELS; i++)
+  {
+    if((channels_used_mask >> i) & 0x1)
+    {
       calibration_value[i][calibration_value_index] = LESENSE_ScanResultDataBufferGet(k++);
     }
   }
@@ -292,8 +308,10 @@ void LETOUCH_Calibration( void ){
   }
 
   /* Calculate max/min-value for each channel and set threshold */
-  for(i = 0; i < NUM_LESENSE_CHANNELS; i++){
-    if((channels_used_mask >> i) & 0x1){
+  for(i = 0; i < NUM_LESENSE_CHANNELS; i++)
+  {
+    if((channels_used_mask >> i) & 0x1)
+    {
       channel_max_value[i] = GetMaxValue(calibration_value[i], NUMBER_OF_CALIBRATION_VALUES);
       channel_min_value[i] = GetMinValue(calibration_value[i], NUMBER_OF_CALIBRATION_VALUES);
 
@@ -310,7 +328,8 @@ static uint16_t GetMaxValue(volatile uint16_t* A, uint16_t N)
 
   for(i=0; i<N; i++)
   {
-    if(max < A[i]){
+    if(max < A[i])
+    {
       max = A[i];
     }
   }
@@ -324,75 +343,23 @@ static uint16_t GetMinValue(volatile uint16_t* A, uint16_t N)
 
   for(i=0; i<N; i++)
   {
-    if(A[i] < min){
+    if(A[i] < min)
+    {
       min = A[i];
     }
   }
   return min;
 }
 
-void LESENSE_IRQHandler( void )
+
+void capsense_main(void)
 {
-  uint8_t channel, i, valid_touch;
-  uint32_t interrupt_flags, tmp, channels_enabled;
-  uint16_t threshold_value;
+	float sensitivity[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0};
 
-  /* Get interrupt flag */
-  interrupt_flags = LESENSE_IntGet();
-  /* Clear interrupt flag */
-  LESENSE_IntClear(interrupt_flags);
+	/* Init Capacitive touch for channels configured in sensitivity array */
+	LETOUCH_Init(sensitivity);
 
-  /* Interrupt handles only one channel at a time */
-  /* therefore only first active channel found is handled by the interrupt. */
-  for(channel = 0; channel < NUM_LESENSE_CHANNELS; channel++){
-    if( (interrupt_flags >> channel) & 0x1 ){
-      break;
-    }
-  }
-
-  /* To filter out possible false touches, the suspected channel is measured several times */
-  /* All samples should be below threshold to trigger an actual touch. */
-
-  /* Disable other channels. */
-  channels_enabled = LESENSE->CHEN;
-  LESENSE->CHEN = 1 << channel;
-
-   /* Evaluate VALIDATE_CNT results for touched channel. */
-  valid_touch = 1;
-  for(i = 0;i<VALIDATE_CNT;i++){
-    /* Start new scan and wait while active. */
-    LESENSE_ScanStart();
-    while(LESENSE->STATUS & LESENSE_STATUS_SCANACTIVE);
-
-    tmp = LESENSE->SCANRES;
-    if((tmp & (1 << channel)) == 0){
-      valid_touch = 0;
-    }
-  }
-
-  /* Enable all channels again. */
-  LESENSE->CHEN = channels_enabled;
-
-
-  if(valid_touch){
-    /* If logic was switched clear button flag and set logic back, else set button flag and invert logic. */
-    if(LESENSE->CH[channel].EVAL & LESENSE_CH_EVAL_COMP){
-      buttons_pressed &= ~(1 << channel);
-      LESENSE->CH[channel].EVAL &= ~LESENSE_CH_EVAL_COMP;
-
-      threshold_value = LESENSE->CH[channel].EVAL & (_LESENSE_CH_EVAL_COMPTHRES_MASK);
-      /* Change threshold value 1 LSB for hysteresis. */
-      threshold_value -= 1;
-      LESENSE_ChannelThresSet(channel, 0, threshold_value);
-    }
-    else{
-      buttons_pressed |= (1 << channel);
-      LESENSE->CH[channel].EVAL |= LESENSE_CH_EVAL_COMP;
-
-      threshold_value = LESENSE->CH[channel].EVAL & (_LESENSE_CH_EVAL_COMPTHRES_MASK);
-      /* Change threshold value 1 LSB for hysteresis. */
-      threshold_value += 1;
-      LESENSE_ChannelThresSet(channel, 0, threshold_value);
-    }
-  }
+	/* If any channels are touched while starting, the calibration will not be correct. */
+	/* Wait while channels are touched to be sure we continue in a calibrated state. */
+	while(LETOUCH_GetChannelsTouched() != 0);
 }

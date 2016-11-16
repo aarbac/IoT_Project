@@ -1,4 +1,6 @@
-src/main.o: ../src/main.c \
+src/captouch.o: ../src/captouch.c ../src/captouch.h ../src/main.h \
+ ../src/GPIO.h ../src/sleep.h \
+ C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_gpio.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include/em_device.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include/efm32lg990f256.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/CMSIS/Include/core_cm3.h \
@@ -53,28 +55,25 @@ src/main.o: ../src/main.c \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include/efm32lg_uart.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include/efm32lg_af_ports.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include/efm32lg_af_pins.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_chip.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_system.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_gpio.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_bus.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_assert.h \
+ ../src/rtc.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_int.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_gpio.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_acmp.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_cmu.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_emu.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_letimer.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_timer.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_adc.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_dma.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_i2c.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_leuart.h \
+ C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_acmp.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_lesense.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/drivers/dmactrl.h \
- ../src/sleep.h ../src/LETimer.h ../src/GPIO.h ../src/SiLabs_errcodes.h \
- ../src/acmp.h ../src/clock.h ../src/main.h ../src/adc.h ../src/dma.h \
- ../src/i2c.h ../src/tsl2651.h ../src/leuart.h ../src/LCD.h \
- ../src/captouch.h ../src/tests.h
+ C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_rtc.h
+
+../src/captouch.h:
+
+../src/main.h:
+
+../src/GPIO.h:
+
+../src/sleep.h:
+
+C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_gpio.h:
 
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include/em_device.h:
 
@@ -184,68 +183,20 @@ C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EF
 
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include/efm32lg_af_pins.h:
 
-C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_chip.h:
-
-C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_system.h:
-
-C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_gpio.h:
-
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_bus.h:
 
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_assert.h:
 
+../src/rtc.h:
+
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_int.h:
-
-C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_gpio.h:
-
-C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_acmp.h:
 
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_cmu.h:
 
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_emu.h:
 
-C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_letimer.h:
-
-C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_timer.h:
-
-C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_adc.h:
-
-C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_dma.h:
-
-C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_i2c.h:
-
-C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_leuart.h:
+C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_acmp.h:
 
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_lesense.h:
 
-C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/drivers/dmactrl.h:
-
-../src/sleep.h:
-
-../src/LETimer.h:
-
-../src/GPIO.h:
-
-../src/SiLabs_errcodes.h:
-
-../src/acmp.h:
-
-../src/clock.h:
-
-../src/main.h:
-
-../src/adc.h:
-
-../src/dma.h:
-
-../src/i2c.h:
-
-../src/tsl2651.h:
-
-../src/leuart.h:
-
-../src/LCD.h:
-
-../src/captouch.h:
-
-../src/tests.h:
+C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_rtc.h:

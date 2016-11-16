@@ -71,6 +71,11 @@ void LCD_write_number(int number_val)
 	LCD_ContrastSet(0x1A);
 }
 
+void LCD_off(void)
+{
+	void SegmentLCD_AllOff(void);
+}
+
 
 
 

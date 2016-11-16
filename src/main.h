@@ -5,6 +5,34 @@
 
 #define ENERGY_MODE EM2 //Used to switch to any Energy Mode
 
+#define TESTS_ON
+
+//#define READ_SENSOR_ADC_BUFFERS
+
+//#define ENABLE_ON_BOARD_LIGHT_SENSOR
+
+//#define LEUART_TEST_ON
+
+#define DMA_ON
+
+#ifndef DMA_ON
+#define USE_POLLING //Used for polling the ADC and not use the IRQ Handler
+#endif
+
+typedef enum
+{
+	LOW = 0,
+	MEDIUM = 1,
+	HIGH = 2
+}alert_level;
+
+#define RTC_FREQ	32768
+#define CALIBRATION_INTERVAL    2
+
+#define ALERT_LVL_LOW_SECS 		2
+#define ALERT_LVL_MEDIUM_SECS 	1
+#define ALERT_LVL_HIGH_SECS 	0.5
+
 #define LFXO_FREQ 				 	32768
 #define LFXO_FREQ_PRESCALER_BY_2 	32768/2
 #define LFXO_FREQ_PRESCALER_BY_4 	32768/4
@@ -42,7 +70,6 @@
 #define Temperature_Upper_Limit 35
 #define Temperature_Lower_Limit 15
 
-#define DMA_ON
 #define DMA_ADC_CHANNEL 0
 #define DMA_Dest_inc 	dmaDataInc2 	//DMA Destination Increment size
 #define DMA_Src_inc 	dmaDataIncNone 	//DMA Source Increment size
@@ -51,12 +78,6 @@
 
 #define CAL_Device_Address (*(volatile unsigned long *) (0x0FE081B0UL)) // Address in the memory (Calibration Value is stored)
 #define ADC_Device_Address (*(volatile unsigned long *) (0x0FE081BCUL))
-
-#ifndef DMA_ON
-#define USE_POLLING //Used for polling the ADC and not use the IRQ Handler
-#endif
-
-//#define ENABLE_ON_BOARD_LIGHT_SENSOR
 
 #define I2C_port 			gpioPortC	//I2C1 port
 #define I2C_SCL_pin_number 	5			//SCL pin
@@ -67,8 +88,6 @@
 #define I2C_Power_port		gpioPortD	//GPIO port used for I2C
 #define I2C_Power_pin		0			//Power GPIO pin
 #define I2C_Interrupt_pin	1			//Interrupt GPIO pin
-
-//#define READ_SENSOR_ADC_BUFFERS
 
 #define LEUART0_port			gpioPortD
 #define LEUART0_TX_pin_number	4

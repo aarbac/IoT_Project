@@ -10,14 +10,17 @@ C_SRCS += \
 ../src/LETimer.c \
 ../src/acmp.c \
 ../src/adc.c \
+../src/captouch.c \
 ../src/clock.c \
 ../src/dma.c \
 ../src/dmactrl.c \
 ../src/i2c.c \
 ../src/leuart.c \
 ../src/main.c \
+../src/rtc.c \
 ../src/segmentlcd.c \
 ../src/sleep.c \
+../src/tests.c \
 ../src/tsl2651.c 
 
 OBJS += \
@@ -27,14 +30,17 @@ OBJS += \
 ./src/LETimer.o \
 ./src/acmp.o \
 ./src/adc.o \
+./src/captouch.o \
 ./src/clock.o \
 ./src/dma.o \
 ./src/dmactrl.o \
 ./src/i2c.o \
 ./src/leuart.o \
 ./src/main.o \
+./src/rtc.o \
 ./src/segmentlcd.o \
 ./src/sleep.o \
+./src/tests.o \
 ./src/tsl2651.o 
 
 C_DEPS += \
@@ -44,14 +50,17 @@ C_DEPS += \
 ./src/LETimer.d \
 ./src/acmp.d \
 ./src/adc.d \
+./src/captouch.d \
 ./src/clock.d \
 ./src/dma.d \
 ./src/dmactrl.d \
 ./src/i2c.d \
 ./src/leuart.d \
 ./src/main.d \
+./src/rtc.d \
 ./src/segmentlcd.d \
 ./src/sleep.d \
+./src/tests.d \
 ./src/tsl2651.d 
 
 
@@ -98,6 +107,13 @@ src/adc.o: ../src/adc.c
 	@echo 'Finished building: $<'
 	@echo ' '
 
+src/captouch.o: ../src/captouch.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: GNU ARM C Compiler'
+	arm-none-eabi-gcc -g -gdwarf-2 -mcpu=cortex-m3 -mthumb '-DEFM32LG990F256=1' -I"D:/Internet of Things/Project/IoT_Project/inc" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/EFM32LG_STK3600/config" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/bsp" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/CMSIS/Include" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/drivers" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc" -O0 -Wall -c -fmessage-length=0 -mno-sched-prolog -fno-builtin -ffunction-sections -fdata-sections -std=c99 -MMD -MP -MF"src/captouch.d" -MT"src/captouch.o" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
 src/clock.o: ../src/clock.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU ARM C Compiler'
@@ -140,6 +156,13 @@ src/main.o: ../src/main.c
 	@echo 'Finished building: $<'
 	@echo ' '
 
+src/rtc.o: ../src/rtc.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: GNU ARM C Compiler'
+	arm-none-eabi-gcc -g -gdwarf-2 -mcpu=cortex-m3 -mthumb '-DEFM32LG990F256=1' -I"D:/Internet of Things/Project/IoT_Project/inc" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/EFM32LG_STK3600/config" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/bsp" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/CMSIS/Include" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/drivers" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc" -O0 -Wall -c -fmessage-length=0 -mno-sched-prolog -fno-builtin -ffunction-sections -fdata-sections -std=c99 -MMD -MP -MF"src/rtc.d" -MT"src/rtc.o" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
 src/segmentlcd.o: ../src/segmentlcd.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU ARM C Compiler'
@@ -151,6 +174,13 @@ src/sleep.o: ../src/sleep.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU ARM C Compiler'
 	arm-none-eabi-gcc -g -gdwarf-2 -mcpu=cortex-m3 -mthumb '-DEFM32LG990F256=1' -I"D:/Internet of Things/Project/IoT_Project/inc" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/EFM32LG_STK3600/config" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/bsp" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/CMSIS/Include" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/drivers" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc" -O0 -Wall -c -fmessage-length=0 -mno-sched-prolog -fno-builtin -ffunction-sections -fdata-sections -std=c99 -MMD -MP -MF"src/sleep.d" -MT"src/sleep.o" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+src/tests.o: ../src/tests.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: GNU ARM C Compiler'
+	arm-none-eabi-gcc -g -gdwarf-2 -mcpu=cortex-m3 -mthumb '-DEFM32LG990F256=1' -I"D:/Internet of Things/Project/IoT_Project/inc" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/EFM32LG_STK3600/config" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/bsp" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/CMSIS/Include" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/drivers" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc" -O0 -Wall -c -fmessage-length=0 -mno-sched-prolog -fno-builtin -ffunction-sections -fdata-sections -std=c99 -MMD -MP -MF"src/tests.d" -MT"src/tests.o" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

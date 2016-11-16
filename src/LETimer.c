@@ -9,6 +9,9 @@
 #include "i2c.h"
 #include "tsl2651.h"
 #include "leuart.h"
+#include "captouch.h"
+#include "LCD.h"
+#include "rtc.h"
 
 #include "em_cmu.h"
 #include "em_gpio.h"
@@ -21,12 +24,16 @@
 #include "em_dma.h"
 #include "em_i2c.h"
 #include "em_leuart.h"
+#include "em_lesense.h"
+#include "em_rtc.h"
 
 unsigned int ACMP_Out_flag;
 unsigned int adc_count = 0;
 volatile int16_t ADC_data_buffer[1000];
 unsigned int led_flag = 0;
 unsigned int energymode_flag = 0;
+unsigned int cap_flag = 0;
+extern unsigned int captouch_interrupt_flags;
 
 /*
  * @brief ACMP_zero structure which will be used to change the VDD scaling factor
@@ -159,19 +166,21 @@ void LETIMER0_IRQHandler(void)
 		if(TSL2651_period_flag == 0)
 		{
 			//BlockSleepMode(EM1);
-			tsl2651_enable();
+			//tsl2651_enable();
 			TSL2651_period_flag = 1;
 		}
 		else if(TSL2651_period_flag == 1)
 		{
 			TSL2651_period_flag = 2;
+			cap_flag = 1;
 		}
 		else if(TSL2651_period_flag == 2)
 		{
 			BlockSleepMode(EM3);
-			tsl2651_disable();
+			//tsl2651_disable();
 			//UnBlockSleepMode(EM1);
 			TSL2651_period_flag = 0;
+			cap_flag = 0;
 		}
 #endif
 		}
@@ -182,7 +191,7 @@ void LETIMER0_IRQHandler(void)
 		if(TSL2651_period_flag == 0)
 		{
 			//BlockSleepMode(EM1);
-			tsl2651_enable();
+			//tsl2651_enable();
 			TSL2651_period_flag = 1;
 		}
 		else if(TSL2651_period_flag == 1)
@@ -192,7 +201,7 @@ void LETIMER0_IRQHandler(void)
 		else if(TSL2651_period_flag == 2)
 		{
 			BlockSleepMode(EM3);
-			tsl2651_disable();
+			//tsl2651_disable();
 			//UnBlockSleepMode(EM1);
 			TSL2651_period_flag = 0;
 		}
@@ -334,7 +343,7 @@ void DMAtransferComplete(unsigned int channel, bool primary, void *user)
 	led_flag = GPIO_PinOutGet(LED_pin_port, LED0_pin_number);
 	leuart_tx_data((int8_t)temp_ret);
 	leuart_send(temp_decimal, led_flag);
-#if(0)
+#ifdef LEUART_TEST_ON
 	if(energymode_flag == 0)
 	{
 		leuart_tx_data((int8_t)temp_ret);
@@ -465,6 +474,115 @@ unsigned int LETimer_Calibrate(void)
 	CMU_ClockEnable(cmuClock_CORELE, false);
 	CMU_ClockEnable(cmuClock_LETIMER0,false);
 
-
 	return SILABS_SUCCESS;
 }
+
+void LESENSE_IRQHandler( void )
+{
+	INT_Disable();
+	static uint16_t count = 0;
+	uint16_t channels_touched = 0;
+	static uint16_t buttons_pressed;
+	uint8_t channel, i, valid_touch;
+	uint32_t interrupt_flags, tmp, channels_enabled;
+	uint16_t threshold_value;
+
+	count++;
+	if(count == 3)
+	{
+		count = 0;
+		INT_Enable();
+		return;
+	}
+
+	captouch_interrupt_flags = LESENSE->IEN;
+
+	/* Get interrupt flag */
+	interrupt_flags = LESENSE_IntGet();
+	/* Clear interrupt flag */
+	LESENSE_IntClear(interrupt_flags);
+
+	/* Interrupt handles only one channel at a time */
+	/* therefore only first active channel found is handled by the interrupt. */
+	for(channel = 0; channel < NUM_LESENSE_CHANNELS; channel++)
+	{
+		if( (interrupt_flags >> channel) & 0x1 )
+		{
+		  break;
+		}
+	}
+
+	/* To filter out possible false touches, the suspected channel is measured several times */
+	/* All samples should be below threshold to trigger an actual touch. */
+
+	/* Disable other channels. */
+	channels_enabled = LESENSE->CHEN;
+	LESENSE->CHEN = 1 << channel;
+
+	/* Evaluate VALIDATE_CNT results for touched channel. */
+	valid_touch = 1;
+
+	for(i = 0;i<VALIDATE_CNT;i++)
+	{
+		/* Start new scan and wait while active. */
+		LESENSE_ScanStart();
+		while(LESENSE->STATUS & LESENSE_STATUS_SCANACTIVE);
+
+		tmp = LESENSE->SCANRES;
+		if((tmp & (1 << channel)) == 0)
+		{
+		  valid_touch = 0;
+		}
+	}
+
+	/* Enable all channels again. */
+	LESENSE->CHEN = channels_enabled;
+
+
+	if(valid_touch)
+	{
+		/* If logic was switched clear button flag and set logic back, else set button flag and invert logic. */
+		if(LESENSE->CH[channel].EVAL & LESENSE_CH_EVAL_COMP)
+		{
+		  buttons_pressed &= ~(1 << channel);
+		  LESENSE->CH[channel].EVAL &= ~LESENSE_CH_EVAL_COMP;
+
+		  threshold_value = LESENSE->CH[channel].EVAL & (_LESENSE_CH_EVAL_COMPTHRES_MASK);
+		  /* Change threshold value 1 LSB for hysteresis. */
+		  threshold_value -= 1;
+		  LESENSE_ChannelThresSet(channel, 0, threshold_value);
+		}
+		else
+		{
+		  buttons_pressed |= (1 << channel);
+		  LESENSE->CH[channel].EVAL |= LESENSE_CH_EVAL_COMP;
+
+		  threshold_value = LESENSE->CH[channel].EVAL & (_LESENSE_CH_EVAL_COMPTHRES_MASK);
+		  /* Change threshold value 1 LSB for hysteresis. */
+		  threshold_value += 1;
+		  LESENSE_ChannelThresSet(channel, 0, threshold_value);
+		}
+	}
+
+	channels_touched = buttons_pressed;
+
+	if(channels_touched)
+	{
+		GPIO_on_off(0, LED_pin_port, LED0_pin_number);
+		//LCD_write_string("CAP_ON");
+		//flag_cap = 1;
+		//send_status(channels_touched);
+		//RTC_CounterReset();
+	}
+	else
+	{
+		GPIO_on_off(1, LED_pin_port, LED0_pin_number);
+		//LCD_write_string(" ");
+		//flag_cap = 0;
+		//LESENSE_IntEnable(LESENSE->IEN);
+		//GPIO_on_off(1, LED_pin_port, LED0_pin_number);
+	}
+	INT_Enable();
+}
+
+

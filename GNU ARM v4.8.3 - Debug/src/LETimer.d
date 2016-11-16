@@ -59,6 +59,7 @@ src/LETimer.o: ../src/LETimer.c ../src/sleep.h ../src/LETimer.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_assert.h \
  ../src/SiLabs_errcodes.h ../src/acmp.h ../src/clock.h ../src/main.h \
  ../src/dma.h ../src/i2c.h ../src/tsl2651.h ../src/leuart.h \
+ ../src/captouch.h ../src/LCD.h ../src/rtc.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_cmu.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_emu.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_int.h \
@@ -68,7 +69,9 @@ src/LETimer.o: ../src/LETimer.c ../src/sleep.h ../src/LETimer.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_adc.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_dma.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_i2c.h \
- C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_leuart.h
+ C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_leuart.h \
+ C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_lesense.h \
+ C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_rtc.h
 
 ../src/sleep.h:
 
@@ -206,6 +209,12 @@ C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_assert.h
 
 ../src/leuart.h:
 
+../src/captouch.h:
+
+../src/LCD.h:
+
+../src/rtc.h:
+
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_cmu.h:
 
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_emu.h:
@@ -225,3 +234,7 @@ C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_dma.h:
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_i2c.h:
 
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_leuart.h:
+
+C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_lesense.h:
+
+C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_rtc.h:
