@@ -1,0 +1,10 @@
+#include "LSM303C.h"
+#include "main.h"
+#include "GPIO.h"
+#include "i2c.h"
+
+#include "em_int.h"
+#include "em_gpio.h"
+#include "em_cmu.h"
+#include "em_emu.h"
+#include "em_i2c.h"
