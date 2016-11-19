@@ -27,6 +27,8 @@ uint8_t I2C_tx_buffer_size1 = 1;
 uint8_t I2C_rx_buffer_size = 10;
 uint8_t I2C_rx_buffer[rx_Buffer_size];
 
+I2C_TransferSeq_TypeDef i2c_transfer;
+
 /*
  * @brief Initialize the I2C on Leopard Gecko
  * @param: void
@@ -87,15 +89,17 @@ unsigned int i2c_init_fn(void)
  */
 void i2c_write(void)
 {
-	I2C_TransferSeq_TypeDef i2c_transfer;
-
-	i2c_transfer.addr = I2C_Slave_Address;
 	i2c_transfer.flags = I2C_FLAG_WRITE;
 	i2c_transfer.buf[0].data = I2C_tx_buffer;
 	i2c_transfer.buf[0].len = I2C_tx_buffer_size;
 	i2c_transfer.buf[1].data = I2C_rx_buffer;
 	i2c_transfer.buf[1].len = I2C_rx_buffer_size;
-	I2C_TransferInit(I2C1, &i2c_transfer);
+
+	if(0)
+	{
+		i2c_transfer.addr = I2C_Slave_Address;
+		I2C_TransferInit(I2C1, &i2c_transfer);
+	}
 
 	while (I2C_Transfer(I2C1) == i2cTransferInProgress);
 }
@@ -115,10 +119,8 @@ void i2c_write(void)
  */
 void i2c_read(void)
 {
-	I2C_TransferSeq_TypeDef i2c_transfer;
 	I2C_TransferReturn_TypeDef i2c_status;
 
-	i2c_transfer.addr = I2C_Slave_Address;
 	i2c_transfer.flags = I2C_FLAG_WRITE_READ;
 
 	i2c_transfer.buf[0].data = I2C_tx_buffer1;
@@ -145,8 +147,24 @@ void i2c_read(void)
  * 4. If write,  transfer buffer to the transmit buffer for write operation, update the size
  * 5. Perform I2C write
  */
-void i2c_buffer_fill(uint8_t buffer[], uint8_t rd_wr, uint8_t size)
+void i2c_buffer_fill(uint8_t buffer[], uint8_t rd_wr, uint8_t size, uint8_t I2C_periph_flag)
 {
+	if(I2C_periph_flag == 1)
+	{
+		i2c_transfer.addr = LSM303C_ACC_I2C_ADDR;
+	}
+	else if(I2C_periph_flag == 2)
+	{
+		i2c_transfer.addr = LSM303C_MAG_I2C_ADDR;
+	}
+	else if(I2C_periph_flag == 3)
+	{
+		i2c_transfer.addr = BME280_I2C_ADDR;
+	}
+	else if(I2C_periph_flag == 4)
+	{
+		i2c_transfer.addr = APDS9960_I2C_ADDR;
+	}
 	if(rd_wr == 0)
 	{
 		I2C_tx_buffer1[0] = buffer[0];

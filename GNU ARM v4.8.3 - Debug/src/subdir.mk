@@ -8,6 +8,7 @@ C_SRCS += \
 ../src/InitDevice.c \
 ../src/LCD.c \
 ../src/LETimer.c \
+../src/LSM303C.c \
 ../src/acmp.c \
 ../src/adc.c \
 ../src/captouch.c \
@@ -28,6 +29,7 @@ OBJS += \
 ./src/InitDevice.o \
 ./src/LCD.o \
 ./src/LETimer.o \
+./src/LSM303C.o \
 ./src/acmp.o \
 ./src/adc.o \
 ./src/captouch.o \
@@ -48,6 +50,7 @@ C_DEPS += \
 ./src/InitDevice.d \
 ./src/LCD.d \
 ./src/LETimer.d \
+./src/LSM303C.d \
 ./src/acmp.d \
 ./src/adc.d \
 ./src/captouch.d \
@@ -90,6 +93,13 @@ src/LETimer.o: ../src/LETimer.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU ARM C Compiler'
 	arm-none-eabi-gcc -g -gdwarf-2 -mcpu=cortex-m3 -mthumb '-DEFM32LG990F256=1' -I"D:/Internet of Things/Project/IoT_Project/inc" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/EFM32LG_STK3600/config" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/bsp" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/CMSIS/Include" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/drivers" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc" -O0 -Wall -c -fmessage-length=0 -mno-sched-prolog -fno-builtin -ffunction-sections -fdata-sections -std=c99 -MMD -MP -MF"src/LETimer.d" -MT"src/LETimer.o" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+src/LSM303C.o: ../src/LSM303C.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: GNU ARM C Compiler'
+	arm-none-eabi-gcc -g -gdwarf-2 -mcpu=cortex-m3 -mthumb '-DEFM32LG990F256=1' -I"D:/Internet of Things/Project/IoT_Project/inc" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/EFM32LG_STK3600/config" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/bsp" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/CMSIS/Include" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/drivers" -I"C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc" -O0 -Wall -c -fmessage-length=0 -mno-sched-prolog -fno-builtin -ffunction-sections -fdata-sections -std=c99 -MMD -MP -MF"src/LSM303C.d" -MT"src/LSM303C.o" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

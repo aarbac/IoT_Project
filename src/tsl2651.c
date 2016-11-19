@@ -7,10 +7,10 @@
 #include "em_gpio.h"
 #include "em_int.h"
 
-uint8_t reg_I2C_tx_buffer_write[2] = {0,0};
-uint8_t reg_I2C_tx_buffer_read[1] = {0};
-uint8_t init_flag = 0;
-uint8_t low_high_flag = 0;
+static uint8_t reg_I2C_tx_buffer_write[2] = {0,0};
+static uint8_t reg_I2C_tx_buffer_read[1] = {0};
+//static uint8_t init_flag = 0;
+static uint8_t low_high_flag = 0;
 
 /*
  * @brief Writing Register values to TSL2561 during enable
