@@ -24,8 +24,8 @@ uint8_t I2C_tx_buffer_size = tx_Buffer_size;
 uint8_t I2C_tx_buffer1[] = { 0x00 };
 uint8_t I2C_tx_buffer_size1 = 1;
 
-uint8_t I2C_rx_buffer_size = 10;
-uint8_t I2C_rx_buffer[rx_Buffer_size];
+static uint8_t I2C_rx_buffer_size = 10;
+static uint8_t I2C_rx_buffer[rx_Buffer_size];
 
 I2C_TransferSeq_TypeDef i2c_transfer;
 
