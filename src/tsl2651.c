@@ -27,56 +27,56 @@ void tsl2651_write_regs_init(void)
 {
 	reg_I2C_tx_buffer_write[0] = TSL2561_CTRL_REG;
 	reg_I2C_tx_buffer_write[1] = TSL2561_POWER_DOWN;
-	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 	reg_I2C_tx_buffer_write[0] = TSL2561_CTRL_REG;
 	reg_I2C_tx_buffer_write[1] = TSL2561_POWER_UP;
-	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 	reg_I2C_tx_buffer_write[0] = TSL2561_TIMER_REG;
 	reg_I2C_tx_buffer_write[1] = 0x01;
-	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 	if(low_high_flag == 0)
 	{
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_LOWLOW_REG;
 		reg_I2C_tx_buffer_write[1] = 0x0f;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_LOWHIGH_REG;
 		reg_I2C_tx_buffer_write[1] = 0x00;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_HIGHLOW_REG;
 		reg_I2C_tx_buffer_write[1] = 0xff;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_HIGHHIGH_REG;
 		reg_I2C_tx_buffer_write[1] = 0xff;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 	}
 	else if(low_high_flag == 1)
 	{
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_LOWLOW_REG;
 		reg_I2C_tx_buffer_write[1] = 0x00;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_LOWHIGH_REG;
 		reg_I2C_tx_buffer_write[1] = 0x00;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_HIGHLOW_REG;
 		reg_I2C_tx_buffer_write[1] = 0x00;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_HIGHHIGH_REG;
 		reg_I2C_tx_buffer_write[1] = 0x08;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 	}
 
 	reg_I2C_tx_buffer_write[0] = TSL2561_INT_REG;
 	reg_I2C_tx_buffer_write[1] = 0x14;
-	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 }
 
 /*
@@ -88,31 +88,31 @@ void tsl2651_write_regs_init(void)
 void tsl2651_read_regs(void)
 {
 	reg_I2C_tx_buffer_read[0] = TSL2561_CTRL_REG;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1);
+	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, TSL2561_I2C_FLAG);
 
 	reg_I2C_tx_buffer_read[0] = TSL2561_TIMER_REG;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1);
+	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, TSL2561_I2C_FLAG);
 
 	reg_I2C_tx_buffer_read[0] = TSL2561_THRESH_LOWLOW_REG;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1);
+	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, TSL2561_I2C_FLAG);
 
 	reg_I2C_tx_buffer_read[0] = TSL2561_THRESH_LOWHIGH_REG;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1);
+	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, TSL2561_I2C_FLAG);
 
 	reg_I2C_tx_buffer_read[0] = TSL2561_THRESH_HIGHLOW_REG;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1);
+	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, TSL2561_I2C_FLAG);
 
 	reg_I2C_tx_buffer_read[0] = TSL2561_THRESH_HIGHHIGH_REG;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1);
+	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, TSL2561_I2C_FLAG);
 
 	reg_I2C_tx_buffer_read[0] = TSL2561_INT_REG;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1);
+	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, TSL2561_I2C_FLAG);
 
 	reg_I2C_tx_buffer_read[0] = TSL2561_ADC0_LOW_REG;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1);
+	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, TSL2561_I2C_FLAG);
 
 	reg_I2C_tx_buffer_read[0] = TSL2561_ADC0_HIGH_REG;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1);
+	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, TSL2561_I2C_FLAG);
 }
 
 /*
@@ -157,7 +157,7 @@ void tsl2651_disable(void)
 	GPIO_IntConfig(I2C_Power_port, I2C_Interrupt_pin, false, false, false);
 	reg_I2C_tx_buffer_write[0] = TSL2561_CTRL_REG;
 	reg_I2C_tx_buffer_write[1] = TSL2561_POWER_DOWN;
-	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 	NVIC_ClearPendingIRQ(GPIO_ODD_IRQn);
 	NVIC_DisableIRQ(GPIO_ODD_IRQn);
 	GPIO_DriveModeSet(I2C_port, gpioDriveModeLowest);
@@ -200,7 +200,7 @@ void GPIO_ODD_IRQHandler(void)
 	GPIO_IntClear(GPIO_int_flags);
 
 	reg_I2C_tx_buffer_read[0] = 0xC0;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, 1, 1);
+	i2c_buffer_fill(reg_I2C_tx_buffer_read, 1, 1, TSL2561_I2C_FLAG);
 
 #ifdef READ_SENSOR_ADC_BUFFERS
 	uint8_t buffer_low, buffer_high = 0;
@@ -281,18 +281,18 @@ void GPIO_ODD_IRQHandler(void)
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_LOWLOW_REG;
 		reg_I2C_tx_buffer_write[1] = 0x00;
 
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_LOWHIGH_REG;
 		reg_I2C_tx_buffer_write[1] = 0x00;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_HIGHLOW_REG;
 		reg_I2C_tx_buffer_write[1] = 0x00;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_HIGHHIGH_REG;
 		reg_I2C_tx_buffer_write[1] = 0x08;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		low_high_flag = 1;
 
@@ -307,19 +307,19 @@ void GPIO_ODD_IRQHandler(void)
 
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_HIGHLOW_REG;
 		reg_I2C_tx_buffer_write[1] = 0xFF;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_HIGHHIGH_REG;
 		reg_I2C_tx_buffer_write[1] = 0xFF;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_LOWLOW_REG;
 		reg_I2C_tx_buffer_write[1] = 0x0f;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		reg_I2C_tx_buffer_write[0] = TSL2561_THRESH_LOWHIGH_REG;
 		reg_I2C_tx_buffer_write[1] = 0x00;
-		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 
 		low_high_flag = 0;
 	}
