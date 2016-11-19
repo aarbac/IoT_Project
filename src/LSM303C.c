@@ -44,10 +44,10 @@ void LSM303C_test(void)
 #ifdef TESTS_ON
 
 	reg_I2C_tx_buffer_read[0] = MAG_WHO_AM_I;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1);
+	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, LSM303C_MAG_I2C_FLAG);
 
 	reg_I2C_tx_buffer_read[0] = ACC_WHO_AM_I;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1);
+	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, LSM303C_ACC_I2C_FLAG);
 
 #endif
 }
