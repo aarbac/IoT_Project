@@ -4,6 +4,12 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+typedef enum
+{
+	read = 0,
+	write = 1
+}rd_wr;
+
 unsigned int i2c_init_fn(void);
 void i2c_read(void);
 void i2c_write(void);
