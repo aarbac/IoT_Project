@@ -37,13 +37,13 @@ typedef enum
 	ACC_WHO_AM_I     = 0x0F,
 	ACC_ACT_TSH      = 0x1E,
 	ACC_ACT_DUR      = 0x1F,
-	ACC_CTRL1        = 0x20,
-	ACC_CTRL2        = 0x21,
-	ACC_CTRL3        = 0x22,
-	ACC_CTRL4        = 0x23,
-	ACC_CTRL5        = 0x24,
-	ACC_CTRL6        = 0x25,
-	ACC_CTRL7        = 0x26,
+	ACC_CTRL_REG1    = 0x20,
+	ACC_CTRL_REG2    = 0x21,
+	ACC_CTRL_REG3    = 0x22,
+	ACC_CTRL_REG4    = 0x23,
+	ACC_CTRL_REG5    = 0x24,
+	ACC_CTRL_REG6    = 0x25,
+	ACC_CTRL_REG7    = 0x26,
 	ACC_STATUS       = 0x27,
 	ACC_OUT_X_L      = 0x28,
 	ACC_OUT_X_H      = 0x29,
@@ -104,8 +104,8 @@ typedef enum
 
 typedef enum
 {
-	MAG,
-	ACC
+	MAG = 0,
+	ACC = 1
 } CHIP_t;
 
 typedef enum
@@ -126,6 +126,89 @@ typedef enum
 	MAG_DO_40_Hz    = 0x18,
 	MAG_DO_80_Hz    = 0x1C
 } MAG_DO_t;
+
+typedef enum
+{
+  MAG_FS_4_Ga   =  0x00,
+  MAG_FS_8_Ga   =  0x20,
+  MAG_FS_12_Ga  =  0x40,
+  MAG_FS_16_Ga  =  0x60
+} MAG_FS_t;
+
+typedef enum
+{
+  MAG_BDU_DISABLE = 0x00,
+  MAG_BDU_ENABLE  = 0x40
+} MAG_BDU_t;
+
+typedef enum
+{
+  MAG_OMXY_LOW_POWER              = 0x00,
+  MAG_OMXY_MEDIUM_PERFORMANCE     = 0x20,
+  MAG_OMXY_HIGH_PERFORMANCE       = 0x40,
+  MAG_OMXY_ULTRA_HIGH_PERFORMANCE = 0x60
+} MAG_OMXY_t;
+
+typedef enum
+{
+  MAG_OMZ_LOW_PW                  =  0x00,
+  MAG_OMZ_MEDIUM_PERFORMANCE      =  0x04,
+  MAG_OMZ_HIGH_PERFORMANCE        =  0x08,
+  MAG_OMZ_ULTRA_HIGH_PERFORMANCE  =  0x0C
+} MAG_OMZ_t;
+
+typedef enum
+{
+  MAG_MD_CONTINUOUS   = 0x00,
+  MAG_MD_SINGLE       = 0x01,
+  MAG_MD_POWER_DOWN_1 = 0x02,
+  MAG_MD_POWER_DOWN_2 = 0x03
+} MAG_MD_t;
+
+typedef enum
+{
+  ACC_FS_2g = 0x00,
+  ACC_FS_4g = 0x20,
+  ACC_FS_8g = 0x30
+} ACC_FS_t;
+
+typedef enum
+{
+  ACC_BDU_DISABLE = 0x00,
+  ACC_BDU_ENABLE  = 0x08
+} ACC_BDU_t;
+
+typedef enum
+{
+  ACC_ODR_POWER_DOWN  = 0x00,
+  ACC_ODR_10_Hz       = 0x10,
+  ACC_ODR_50_Hz       = 0x20,
+  ACC_ODR_100_Hz      = 0x30,
+  ACC_ODR_200_Hz      = 0x40,
+  ACC_ODR_400_Hz      = 0x50,
+  ACC_ODR_800_Hz      = 0x60,
+  ACC_ODR_MASK        = 0x60
+} ACC_ODR_t;
+
+typedef enum
+{
+  ACC_DISABLE_ALL = 0x00,
+  ACC_X_ENABLE    = 0x01,
+  ACC_Y_ENABLE    = 0x02,
+  ACC_Z_ENABLE    = 0x04
+} ACC_AXIS_EN_t;
+
+typedef enum
+{
+  ACC_X_NEW_DATA_AVAILABLE    = 0x01,
+  ACC_Y_NEW_DATA_AVAILABLE    = 0x02,
+  ACC_Z_NEW_DATA_AVAILABLE    = 0x04,
+  ACC_ZYX_NEW_DATA_AVAILABLE  = 0x08,
+  ACC_X_OVERRUN               = 0x10,
+  ACC_Y_OVERRUN               = 0x20,
+  ACC_Z_OVERRUN               = 0x40,
+  ACC_ZYX_OVERRUN             = 0x80
+} ACC_STATUS_FLAGS_t;
 
 void LSM303C_init(void);
 void LSM303C_write(unsigned int reg, unsigned int data);
