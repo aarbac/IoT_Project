@@ -95,11 +95,7 @@ void i2c_write(void)
 	i2c_transfer.buf[1].data = I2C_rx_buffer;
 	i2c_transfer.buf[1].len = I2C_rx_buffer_size;
 
-	if(0)
-	{
-		i2c_transfer.addr = I2C_Slave_Address;
-		I2C_TransferInit(I2C1, &i2c_transfer);
-	}
+	I2C_TransferInit(I2C1, &i2c_transfer);
 
 	while (I2C_Transfer(I2C1) == i2cTransferInProgress);
 }
