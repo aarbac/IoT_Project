@@ -8,25 +8,25 @@
 
 typedef enum
 {
-	MAG_WHO_AM_I   = 0x0F,
-	MAG_CTRL_REG1  = 0x20,
-	MAG_CTRL_REG2  = 0x21,
-	MAG_CTRL_REG3  = 0x22,
-	MAG_CTRL_REG4  = 0x23,
-	MAG_CTRL_REG5  = 0x24,
-	MAG_STATUS_REG = 0x27,
-	MAG_OUTX_L     = 0x28,
-	MAG_OUTX_H     = 0x29,
-	MAG_OUTY_L     = 0x2A,
-	MAG_OUTY_H     = 0x2B,
-	MAG_OUTZ_L     = 0x2C,
-	MAG_OUTZ_H     = 0x2D,
-	MAG_TEMP_OUT_L = 0x2E,
-	MAG_TEMP_OUT_H = 0x2F,
-	MAG_INT_CFG    = 0x30,
-	MAG_INT_SRC    = 0x31,
-	MAG_INT_THS_L  = 0x32,
-	MAG_INT_THS_H  = 0x33
+	MAG_WHO_AM_I   	= 0x0F,
+	MAG_CTRL_REG1  	= 0x20,
+	MAG_CTRL_REG2  	= 0x21,
+	MAG_CTRL_REG3  	= 0x22,
+	MAG_CTRL_REG4 	= 0x23,
+	MAG_CTRL_REG5	= 0x24,
+	MAG_STATUS		= 0x27,
+	MAG_OUT_X_L     = 0x28,
+	MAG_OUT_X_H     = 0x29,
+	MAG_OUT_Y_L     = 0x2A,
+	MAG_OUT_Y_H     = 0x2B,
+	MAG_OUT_Z_L     = 0x2C,
+	MAG_OUT_Z_H     = 0x2D,
+	MAG_TEMP_OUT_L 	= 0x2E,
+	MAG_TEMP_OUT_H 	= 0x2F,
+	MAG_INT_CFG    	= 0x30,
+	MAG_INT_SRC    	= 0x31,
+	MAG_INT_THS_L  	= 0x32,
+	MAG_INT_THS_H  	= 0x33
 } MAG_REG_t;
 
 /////////////////////////////////////
