@@ -221,8 +221,8 @@ void GPIO_ODD_IRQHandler(void)
 		threshold_flag = 1;
 		reg_I2C_tx_buffer_write[0] = 0x82;
 		reg_I2C_tx_buffer_write[1] = 0x00;
-
 		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
+
 		reg_I2C_tx_buffer_write[0] = 0x83;
 		reg_I2C_tx_buffer_write[1] = 0x00;
 		i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2);
