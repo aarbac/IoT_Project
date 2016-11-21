@@ -216,4 +216,10 @@ int LSM303C_read(unsigned int reg);
 void LSM303C_enable(void);
 void LSM303C_disable(void);
 
+int LSM303C_GetMagntStatus(void);
+int LSM303C_GetAccelStatus(void);
+void LSM303C_GetMagntData(void);
+void LSM303C_GetAccelData(void);
+int LSM303C_test(void);
+
 #endif

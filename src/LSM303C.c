@@ -17,11 +17,6 @@ static uint8_t reg_I2C_tx_buffer_read[1] = {0};
 AxesRaw_t accel;
 AxesRaw_t mag;
 
-void LSM303C_init(void)
-{
-
-}
-
 void LSM303C_write_reg(unsigned int reg, unsigned int data, unsigned int acc_mag_flag)
 {
 	if(acc_mag_flag == ACC)
@@ -166,7 +161,7 @@ __STATIC_INLINE void Acc_set_odr(int val)
 	LSM303C_write_reg(ACC_CTRL_REG1, val, ACC);
 }
 
-void LSM303C_enable(void)
+void LSM303C_init(void)
 {
 	Mag_set_odr(MAG_DO_40_Hz);
 	Mag_set_fullscale(MAG_FS_16_Ga);
@@ -180,6 +175,11 @@ void LSM303C_enable(void)
 	Acc_set_odr(ACC_ODR_100_Hz);
 }
 
+void LSM303C_enable(void)
+{
+
+}
+
 void LSM303C_disable(void)
 {
 
@@ -190,13 +190,8 @@ int LSM303C_test(void)
 #ifdef TESTS_ON
 	int ret_val_acc, ret_val_mag, ret;
 
-	reg_I2C_tx_buffer_read[0] = MAG_WHO_AM_I;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_MAG_I2C_FLAG);
-	ret_val_mag = i2c_buffer_read();
-
-	reg_I2C_tx_buffer_read[0] = ACC_WHO_AM_I;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_ACC_I2C_FLAG);
-	ret_val_acc = i2c_buffer_read();
+	ret_val_acc = LSM303C_read_reg(ACC_WHO_AM_I, ACC);
+	ret_val_mag = LSM303C_read_reg(MAG_WHO_AM_I, MAG);
 
 	if(ret_val_acc == 0x41 && ret_val_mag == 0x3D)
 	{
@@ -216,28 +211,16 @@ void LSM303C_GetAccelData()
 {
 	int8_t val_h = 0, val_l = 0;
 
-	reg_I2C_tx_buffer_read[0] = ACC_OUT_X_L;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_ACC_I2C_FLAG);
-	val_l = i2c_buffer_read();
-	reg_I2C_tx_buffer_read[0] = ACC_OUT_X_H;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_ACC_I2C_FLAG);
-	val_h = i2c_buffer_read();
+	val_l = LSM303C_read_reg(ACC_OUT_X_L, ACC);
+	val_h = LSM303C_read_reg(ACC_OUT_X_H, ACC);
 	accel.xAxis = ((int16_t) ((val_h << 8) | val_l));
 
-	reg_I2C_tx_buffer_read[0] = ACC_OUT_Y_L;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_ACC_I2C_FLAG);
-	val_l = i2c_buffer_read();
-	reg_I2C_tx_buffer_read[0] = ACC_OUT_Y_H;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_ACC_I2C_FLAG);
-	val_h = i2c_buffer_read();
+	val_l = LSM303C_read_reg(ACC_OUT_Y_L, ACC);
+	val_h = LSM303C_read_reg(ACC_OUT_Y_H, ACC);
 	accel.yAxis = ((int16_t) ((val_h << 8) | val_l));
 
-	reg_I2C_tx_buffer_read[0] = ACC_OUT_Z_L;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_ACC_I2C_FLAG);
-	val_l = i2c_buffer_read();
-	reg_I2C_tx_buffer_read[0] = ACC_OUT_Z_H;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_ACC_I2C_FLAG);
-	val_h = i2c_buffer_read();
+	val_l = LSM303C_read_reg(ACC_OUT_Z_L, ACC);
+	val_h = LSM303C_read_reg(ACC_OUT_Z_H, ACC);
 	accel.zAxis = ((int16_t) ((val_h << 8) | val_l));
 }
 
@@ -245,50 +228,30 @@ void LSM303C_GetMagntData()
 {
 	int8_t val_h = 0, val_l = 0;
 
-	reg_I2C_tx_buffer_read[0] = MAG_OUT_X_L;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_MAG_I2C_FLAG);
-	val_l = i2c_buffer_read();
-	reg_I2C_tx_buffer_read[0] = MAG_OUT_X_H;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_MAG_I2C_FLAG);
-	val_h = i2c_buffer_read();
+	val_l = LSM303C_read_reg(MAG_OUT_X_L, MAG);
+	val_h = LSM303C_read_reg(MAG_OUT_X_H, MAG);
 	mag.xAxis = ((int16_t) ((val_h << 8) | val_l));
 
-	reg_I2C_tx_buffer_read[0] = MAG_OUT_Y_L;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_MAG_I2C_FLAG);
-	val_l = i2c_buffer_read();
-	reg_I2C_tx_buffer_read[0] = MAG_OUT_Y_H;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_MAG_I2C_FLAG);
-	val_h = i2c_buffer_read();
+	val_l = LSM303C_read_reg(MAG_OUT_Y_L, MAG);
+	val_h = LSM303C_read_reg(MAG_OUT_Y_H, MAG);
 	mag.yAxis = ((int16_t) ((val_h << 8) | val_l));
 
-	reg_I2C_tx_buffer_read[0] = MAG_OUT_Z_L;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_MAG_I2C_FLAG);
-	val_l = i2c_buffer_read();
-	reg_I2C_tx_buffer_read[0] = MAG_OUT_Z_H;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_MAG_I2C_FLAG);
-	val_h = i2c_buffer_read();
+	val_l = LSM303C_read_reg(MAG_OUT_Z_L, MAG);
+	val_h = LSM303C_read_reg(MAG_OUT_Z_H, MAG);
 	mag.zAxis = ((int16_t) ((val_h << 8) | val_l));
 }
 
 int LSM303C_GetAccelStatus()
 {
 	int status;
-
-	reg_I2C_tx_buffer_read[0] = ACC_STATUS;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_ACC_I2C_FLAG);
-	status = i2c_buffer_read();
-
+	status = LSM303C_read_reg(ACC_STATUS, ACC);
 	return status;
 }
 
 int LSM303C_GetMagntStatus()
 {
 	int status;
-
-	reg_I2C_tx_buffer_read[0] = MAG_STATUS;
-	i2c_buffer_fill(reg_I2C_tx_buffer_read, read, 1, LSM303C_MAG_I2C_FLAG);
-	status = i2c_buffer_read();
-
+	status = LSM303C_read_reg(MAG_STATUS, MAG);
 	return status;
 }
 
