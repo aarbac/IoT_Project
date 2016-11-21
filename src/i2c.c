@@ -29,6 +29,12 @@ static uint8_t I2C_rx_buffer[rx_Buffer_size];
 
 I2C_TransferSeq_TypeDef i2c_transfer;
 
+typedef enum
+{
+	I2C_zero = 0,
+	I2C_one = 1
+}I2Cn;
+
 /*
  * @brief Initialize the I2C on Leopard Gecko
  * @param: void
@@ -56,21 +62,27 @@ unsigned int i2c_init_fn(void)
 			};
 
 	I2C_IntClear(I2C1, I2C_IEN_ADDR | I2C_IEN_RXDATAV | I2C_IEN_SSTOP);
+	I2C_IntClear(I2C0, I2C_IEN_ADDR | I2C_IEN_RXDATAV | I2C_IEN_SSTOP);
 
 	I2C1->ROUTE = I2C_ROUTE_SDAPEN | I2C_ROUTE_SCLPEN | (0 << _I2C_ROUTE_LOCATION_SHIFT);
 	I2C_Init(I2C1, &i2c_init);
+	I2C_Init(I2C0, &i2c_init);
 
-	if(I2C1->STATE && I2C_STATE_BUSY)
+	if((I2C1->STATE && I2C_STATE_BUSY) || (I2C0->STATE && I2C_STATE_BUSY))
 	{
 		I2C1->CMD = I2C_CMD_ABORT;
+		I2C0->CMD = I2C_CMD_ABORT;
 	}
 
 	I2C_rx_active = false;
 	I2C_tx_start = false;
 	I2C_rx_buffer_index = 0;
 
-	I2C1->SADDR = I2C_Slave_Address;
+	I2C1->SADDR = BME280_I2C_ADDR;
 	I2C1->CTRL |= I2C_CTRL_SLAVE | I2C_CTRL_AUTOACK | I2C_CTRL_AUTOSN | I2C_CTRL_EN;
+
+	I2C0->SADDR = LSM303C_ACC_I2C_ADDR;
+	I2C0->CTRL |= I2C_CTRL_SLAVE | I2C_CTRL_AUTOACK | I2C_CTRL_AUTOSN | I2C_CTRL_EN;
 	return SILABS_SUCCESS;
 }
 
@@ -87,7 +99,7 @@ unsigned int i2c_init_fn(void)
  * 7. Transfer the Initialize values
  * 8. Wait till the I2C finishes transmitting
  */
-void i2c_write(void)
+void i2c_write(uint8_t I2Cn_num)
 {
 	i2c_transfer.flags = I2C_FLAG_WRITE;
 	i2c_transfer.buf[0].data = I2C_tx_buffer;
@@ -95,9 +107,17 @@ void i2c_write(void)
 	i2c_transfer.buf[1].data = I2C_rx_buffer;
 	i2c_transfer.buf[1].len = I2C_rx_buffer_size;
 
-	I2C_TransferInit(I2C1, &i2c_transfer);
+	if(I2Cn_num == 0)
+	{
+		I2C_TransferInit(I2C0, &i2c_transfer);
+		while (I2C_Transfer(I2C0) == i2cTransferInProgress);
+	}
+	else if(I2Cn_num == 1)
+	{
+		I2C_TransferInit(I2C1, &i2c_transfer);
+		while (I2C_Transfer(I2C1) == i2cTransferInProgress);
+	}
 
-	while (I2C_Transfer(I2C1) == i2cTransferInProgress);
 }
 
 /*
@@ -113,21 +133,26 @@ void i2c_write(void)
  * 7. Transfer the Initialize values
  * 8. Wait till the I2C finishes transmitting
  */
-void i2c_read(void)
+void i2c_read(uint8_t I2Cn_num)
 {
 	I2C_TransferReturn_TypeDef i2c_status;
 
 	i2c_transfer.flags = I2C_FLAG_WRITE_READ;
-
 	i2c_transfer.buf[0].data = I2C_tx_buffer1;
 	i2c_transfer.buf[0].len = I2C_tx_buffer_size1;
-
 	i2c_transfer.buf[1].data = I2C_rx_buffer;
 	i2c_transfer.buf[1].len = I2C_rx_buffer_size;
 
-	i2c_status = I2C_TransferInit(I2C1, &i2c_transfer);
-
-	while(I2C_Transfer(I2C1) == i2cTransferInProgress);
+	if(I2Cn_num == 0)
+	{
+		i2c_status = I2C_TransferInit(I2C0, &i2c_transfer);
+		while(I2C_Transfer(I2C0) == i2cTransferInProgress);
+	}
+	else if(I2Cn_num == 1)
+	{
+		i2c_status = I2C_TransferInit(I2C1, &i2c_transfer);
+		while(I2C_Transfer(I2C1) == i2cTransferInProgress);
+	}
 }
 
 /*
@@ -145,27 +170,38 @@ void i2c_read(void)
  */
 void i2c_buffer_fill(uint8_t buffer[], uint8_t rd_wr, uint8_t size, uint8_t I2C_periph_flag)
 {
+	uint8_t I2Cn_num;
 	if(I2C_periph_flag == 1)
 	{
+		I2C0->SADDR = LSM303C_ACC_I2C_ADDR;
 		i2c_transfer.addr = LSM303C_ACC_I2C_ADDR;
+		I2Cn_num = I2C_zero;
 	}
 	else if(I2C_periph_flag == 2)
 	{
+		I2C0->SADDR = LSM303C_MAG_I2C_ADDR;
 		i2c_transfer.addr = LSM303C_MAG_I2C_ADDR;
+		I2Cn_num = I2C_zero;
 	}
 	else if(I2C_periph_flag == 3)
 	{
+		I2C1->SADDR = BME280_I2C_ADDR;
+		I2C1->ROUTE = I2C_ROUTE_SDAPEN | I2C_ROUTE_SCLPEN | (0 << _I2C_ROUTE_LOCATION_SHIFT);
 		i2c_transfer.addr = BME280_I2C_ADDR;
+		I2Cn_num = I2C_one;
 	}
 	else if(I2C_periph_flag == 4)
 	{
+		I2C1->SADDR = APDS9960_I2C_ADDR;
+		I2C1->ROUTE = I2C_ROUTE_SDAPEN | I2C_ROUTE_SCLPEN | (1 << _I2C_ROUTE_LOCATION_SHIFT);
 		i2c_transfer.addr = APDS9960_I2C_ADDR;
+		I2Cn_num = I2C_one;
 	}
 	if(rd_wr == 0)
 	{
 		I2C_tx_buffer1[0] = buffer[0];
 		I2C_tx_buffer_size1 = size;
-		i2c_read();
+		i2c_read(I2Cn_num);
 	}
 	else if(rd_wr == 1)
 	{
@@ -174,7 +210,7 @@ void i2c_buffer_fill(uint8_t buffer[], uint8_t rd_wr, uint8_t size, uint8_t I2C_
 			I2C_tx_buffer[i] = buffer[i];
 		}
 		I2C_tx_buffer_size = size;
-		i2c_write();
+		i2c_write(I2Cn_num);
 	}
 }
 
