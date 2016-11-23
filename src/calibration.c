@@ -5,7 +5,7 @@
 static uint8_t reg_I2C_tx_buffer_write[2] = {0,0};
 static uint8_t reg_I2C_tx_buffer_read[1] = {0};
 
-int8_t calread(uint8_t value )
+int8_t calread(uint8_t value)
 {
 reg_I2C_tx_buffer_read[0] = value;
 i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, BME280_I2C_FLAG);

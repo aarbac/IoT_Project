@@ -58,4 +58,7 @@ struct calibratesensor
 	uint8_t H6;
 }calibration;
 
+int8_t calread(uint8_t value);
+void calibrate();
+
 #endif
