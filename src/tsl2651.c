@@ -128,12 +128,12 @@ void tsl2651_read_regs(void)
  */
 void tsl2651_enable(void)
 {
-	GPIO_PinModeSet(I2C_port, I2C_SCL_pin_number, gpioModeWiredAndPullUpFilter, 1);
-	GPIO_PinModeSet(I2C_port, I2C_SDA_pin_number, gpioModeWiredAndPullUpFilter, 1);
+	GPIO_PinModeSet(I2C1_port, I2C1_SCL_pin_number, gpioModeWiredAndPullUpFilter, 1);
+	GPIO_PinModeSet(I2C1_port, I2C1_SDA_pin_number, gpioModeWiredAndPullUpFilter, 1);
 	GPIO_PinModeSet(I2C_Power_port, I2C_Interrupt_pin, gpioModeInput, 0);
 	GPIO_PinModeSet(I2C_Power_port, I2C_Power_pin, gpioModePushPull, 0);
 	GPIO_PinOutSet(I2C_Power_port, I2C_Power_pin);
-	GPIO_DriveModeSet(I2C_port, gpioDriveModeLowest);
+	GPIO_DriveModeSet(I2C1_port, gpioDriveModeLowest);
 	for(int i = 0; i < 200; i++);
 	tsl2651_write_regs_init();
 	GPIO_IntConfig(I2C_Power_port, I2C_Interrupt_pin, false, true, true);
@@ -160,13 +160,13 @@ void tsl2651_disable(void)
 	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, TSL2561_I2C_FLAG);
 	NVIC_ClearPendingIRQ(GPIO_ODD_IRQn);
 	NVIC_DisableIRQ(GPIO_ODD_IRQn);
-	GPIO_DriveModeSet(I2C_port, gpioDriveModeLowest);
+	GPIO_DriveModeSet(I2C1_port, gpioDriveModeLowest);
 	GPIO_DriveModeSet(I2C_Power_port, gpioDriveModeLowest);
 	GPIO_PinOutClear(I2C_Power_port, I2C_Power_pin);
-	GPIO_PinOutClear(I2C_port, I2C_SCL_pin_number);
-	GPIO_PinOutClear(I2C_port, I2C_SDA_pin_number);
-	GPIO_PinModeSet(I2C_port, I2C_SCL_pin_number, gpioModeDisabled, 0);
-	GPIO_PinModeSet(I2C_port, I2C_SDA_pin_number, gpioModeDisabled, 0);
+	GPIO_PinOutClear(I2C1_port, I2C1_SCL_pin_number);
+	GPIO_PinOutClear(I2C1_port, I2C1_SDA_pin_number);
+	GPIO_PinModeSet(I2C1_port, I2C1_SCL_pin_number, gpioModeDisabled, 0);
+	GPIO_PinModeSet(I2C1_port, I2C1_SDA_pin_number, gpioModeDisabled, 0);
 	GPIO_PinModeSet(I2C_Power_port, I2C_Interrupt_pin, gpioModeDisabled, 0);
 	GPIO_PinModeSet(I2C_Power_port, I2C_Power_pin, gpioModeDisabled, 0);
 }
