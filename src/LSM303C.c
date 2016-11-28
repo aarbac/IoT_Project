@@ -31,7 +31,6 @@ void LSM303C_write_reg(unsigned int reg, unsigned int data, unsigned int acc_mag
 		reg_I2C_tx_buffer_write[1] = data;
 		i2c_buffer_fill(reg_I2C_tx_buffer_write, write, 2, LSM303C_MAG_I2C_FLAG);
 	}
-
 }
 
 int LSM303C_read_reg(unsigned int reg, unsigned int acc_mag_flag)
