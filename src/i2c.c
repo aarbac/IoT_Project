@@ -50,6 +50,7 @@ typedef enum
 unsigned int i2c_init_fn(void)
 {
 	CMU_ClockEnable(cmuClock_HFPER, true);
+	CMU_ClockEnable(cmuClock_I2C0, true);
 	CMU_ClockEnable(cmuClock_I2C1, true);
 
 	I2C_Init_TypeDef i2c_init =
@@ -65,6 +66,7 @@ unsigned int i2c_init_fn(void)
 	I2C_IntClear(I2C0, I2C_IEN_ADDR | I2C_IEN_RXDATAV | I2C_IEN_SSTOP);
 
 	I2C1->ROUTE = I2C_ROUTE_SDAPEN | I2C_ROUTE_SCLPEN | (0 << _I2C_ROUTE_LOCATION_SHIFT);
+	I2C0->ROUTE = I2C_ROUTE_SDAPEN | I2C_ROUTE_SCLPEN | (1 << _I2C_ROUTE_LOCATION_SHIFT);
 	I2C_Init(I2C1, &i2c_init);
 	I2C_Init(I2C0, &i2c_init);
 

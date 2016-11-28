@@ -33,11 +33,14 @@ unsigned int GPIO_Init(sleepstatemode_enum EMx)
 	GPIO_PinModeSet(Light_Excite_port, Light_Excite_number, gpioModePushPull, 1); //Light excite pin
 #endif
 
-	GPIO_PinModeSet(I2C_port, I2C_SCL_pin_number, gpioModeWiredAnd, 1);
-	GPIO_PinModeSet(I2C_port, I2C_SDA_pin_number, gpioModeWiredAnd, 1);
+	GPIO_PinModeSet(I2C1_port, I2C1_SCL_pin_number, gpioModeWiredAnd, 1);
+	GPIO_PinModeSet(I2C1_port, I2C1_SDA_pin_number, gpioModeWiredAnd, 1);
 
 	GPIO_PinModeSet(I2C_Power_port, I2C_Interrupt_pin, gpioModeInput, 0);
 	GPIO_PinModeSet(I2C_Power_port, I2C_Power_pin, gpioModePushPull, 0);
+
+	GPIO_PinModeSet(I2C0_port, I2C0_SCL_pin_number, gpioModeWiredAndPullUpFilter, 1);
+	GPIO_PinModeSet(I2C0_port, I2C0_SDA_pin_number, gpioModeWiredAndPullUpFilter, 1);
 
 	GPIO_DriveModeSet(LED_pin_port, gpioDriveModeLowest);
 	GPIO_DriveModeSet(Light_Excite_port, gpioDriveModeLowest);
