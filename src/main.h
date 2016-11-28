@@ -89,11 +89,15 @@ typedef enum
 #define CAL_Device_Address (*(volatile unsigned long *) (0x0FE081B0UL)) // Address in the memory (Calibration Value is stored)
 #define ADC_Device_Address (*(volatile unsigned long *) (0x0FE081BCUL))
 
-#define I2C_port 			gpioPortC	//I2C1 port
-#define I2C_SCL_pin_number 	5			//SCL pin
-#define I2C_SDA_pin_number	4			//SDA pin
-#define I2C_RX_Buffer_Size	1			//Receive Buffer size
-#define I2C_Slave_Address 	0x39 << 1	//Slave address
+#define I2C0_port 				gpioPortD	//I2C1 port
+#define I2C0_SCL_pin_number 	7			//SCL pin
+#define I2C0_SDA_pin_number		6			//SDA pin
+
+#define I2C1_port 				gpioPortC	//I2C1 port
+#define I2C1_SCL_pin_number 	5			//SCL pin
+#define I2C1_SDA_pin_number		4			//SDA pin
+#define I2C1_RX_Buffer_Size		1			//Receive Buffer size
+#define I2C1_Slave_Address 		0x39 << 1	//Slave address
 
 #define I2C_Power_port		gpioPortD	//GPIO port used for I2C
 #define I2C_Power_pin		0			//Power GPIO pin
