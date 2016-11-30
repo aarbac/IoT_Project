@@ -19,7 +19,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-
+#include <math.h>
 #include "em_device.h"
 #include "em_chip.h"
 #include "em_int.h"
@@ -134,14 +134,16 @@ int main(void)
 	}
 #endif
 
-	//calibrate();
+	/*calibrate();
 	writeBME280_settings();
-	//x=read_temperature();
+	x=read_temperature();
+	x=read_humidity();
+	x=read_pressure();*/
+	//x=read_altitude();
  	writeAPDS9960_settings();
 	/* Infinite loop */
 	while (1)
 	{
-
 		sleep();
 	}
 }

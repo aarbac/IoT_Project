@@ -5,17 +5,20 @@
 static uint8_t reg_I2C_tx_buffer_write[2] = {0,0};
 static uint8_t reg_I2C_tx_buffer_read[1] = {0};
 
-int8_t calread(uint8_t value)
+uint8_t calread(uint8_t value)
 {
 reg_I2C_tx_buffer_read[0] = value;
 i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, BME280_I2C_FLAG);
-int8_t readdata=i2c_buffer_read();
+uint8_t readdata=i2c_buffer_read();
 return readdata;
 }
 
 void calibrate()
 {
-
+	/*reg_I2C_tx_buffer_write[0] = 0xE0;
+	reg_I2C_tx_buffer_write[1] = 0xB6;
+	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, BME280_I2C_FLAG);
+*/
 	calibration.T1 = ((uint16_t)((calread(T1_MSB) << 8) + calread(T1_LSB)));
 	calibration.T2 = ((int16_t)((calread(T2_MSB) << 8) + calread(T2_LSB)));
 	calibration.T3 = ((int16_t)((calread(T3_MSB) << 8) + calread(T3_LSB)));

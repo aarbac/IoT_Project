@@ -2,6 +2,7 @@
 #define HEADER_BME280
 
 #include <stdint.h>
+#include <math.h>
 
 #define  CTRL_HUMIDITY		0xF2 //Ctrl Humidity
 #define  STAT				0xF3 //Status
@@ -16,7 +17,7 @@
 #define  HUMIDITY_MSB		0xFD //Humidity MSB
 #define  HUMIDITY_LSB		0xFE //Humidity LSB
 
-int8_t valueread(uint8_t value);
+uint8_t valueread(uint8_t value);
 float read_pressure();
 float read_altitude();
 float read_temperature();

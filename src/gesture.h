@@ -77,6 +77,6 @@
 #define GCONF3          0       // All photodiodes active during gesture
 #define GIEN            1        // Disable gesture interrupts
 
-int8_t valueread1(uint8_t value);
+uint8_t valueread1(uint8_t value);
 void writeAPDS9960_settings();
 #endif

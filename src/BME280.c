@@ -2,19 +2,19 @@
 #include "i2c.h"
 #include "main.h"
 #include "calibration.h"
-
+#include <math.h>
 uint8_t I2C_rx_buffer_size = 10;
 uint8_t I2C_rx_buffer[10];
-int64_t t_fine;
+int32_t t_fine;
 
 static uint8_t reg_I2C_tx_buffer_write[2] = {0,0};
 static uint8_t reg_I2C_tx_buffer_read[1] = {0};
 
-int8_t valueread(uint8_t value)
+uint8_t valueread(uint8_t value)
 {
 	reg_I2C_tx_buffer_read[0] = value;
 	i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, BME280_I2C_FLAG);
-	int8_t readdata=i2c_buffer_read();
+	uint8_t readdata=i2c_buffer_read();
 	return readdata;
 }
 
@@ -62,17 +62,17 @@ float read_temperature()
 		// t_fine carries fine temperature as global value
 
 		//get the reading (adc_T);
-	int32_t adc_T = ((uint32_t)valueread(TEMPERATURE_MSB) << 12) | ((uint32_t)valueread(TEMPERATURE_LSB) << 4) | ((valueread(TEMPERATURE_XLSB) >> 4) & 0x0F);
-		//By datasheet, calibrate
+	int32_t adc_T = ((uint32_t)valueread(TEMPERATURE_MSB) << 12) | ((uint32_t)valueread(TEMPERATURE_LSB) << 4) | ((valueread(TEMPERATURE_LSB) >> 4) & 0x0F);
+
+	//By datasheet, calibrate
 		int64_t var1, var2;
 
 		var1 = ((((adc_T>>3) - ((int32_t)calibration.T1<<1))) * ((int32_t)calibration.T2)) >> 11;
-		var2 = (((((adc_T>>4) - ((int32_t)calibration.T1)) * ((adc_T>>4) - ((int32_t)calibration.T1))) >> 12) *
-		((int32_t)calibration.T3)) >> 14;
+		var2 = (((((adc_T>>4) - ((int32_t)calibration.T1)) * ((adc_T>>4) - ((int32_t)calibration.T1))) >> 12) * ((int32_t)calibration.T3)) >> 14;
 		t_fine = var1 + var2;
 		float output = (t_fine * 5 + 128) >> 8;
 
-		//output = output / 100;
+		output = output / 100;
 
 		return output;
 
@@ -99,21 +99,27 @@ float read_humidity()
 
 void writeBME280_settings()
 {
+uint8_t data;
 	reg_I2C_tx_buffer_write[0] = CTRL_MEAS;
 	reg_I2C_tx_buffer_write[1] = 0x00;
 	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, BME280_I2C_FLAG);
 
 	reg_I2C_tx_buffer_write[0] = CONFIG;
-	reg_I2C_tx_buffer_write[1] = (0x00 << 0x5) & 0xE0;
-	reg_I2C_tx_buffer_write[1] |= (0x00<< 0x02) & 0x1C;
+	data = ((0x00 << 0x5) & 0xE0);
+	data |= ((0x00<< 0x02) & 0x1C);
+	reg_I2C_tx_buffer_write[1]=data;
 	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, BME280_I2C_FLAG);
 
 	reg_I2C_tx_buffer_write[0] = CTRL_HUMIDITY;
-	reg_I2C_tx_buffer_write[1] = (0x00 & 0x07);
+	data= (0x00 & 0x07);
+	reg_I2C_tx_buffer_write[1]=data;
 	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, BME280_I2C_FLAG);
 
 	reg_I2C_tx_buffer_write[0] = CTRL_MEAS;
-	reg_I2C_tx_buffer_write[1] = 0x03;
+	data=(0x00 << 0x5) & 0xE0;
+	data|=(0x00 << 0x02) & 0x1C;
+	data|=(0x00) & 0x03;
+	reg_I2C_tx_buffer_write[1] = data;
 	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, BME280_I2C_FLAG);
 }
 
