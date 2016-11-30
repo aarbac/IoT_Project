@@ -7,7 +7,6 @@
 #include "main.h"
 #include "dma.h"
 #include "i2c.h"
-#include "tsl2651.h"
 #include "leuart.h"
 #include "captouch.h"
 #include "LCD.h"

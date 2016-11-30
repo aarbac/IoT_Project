@@ -1,6 +1,8 @@
 #ifndef HEADER_BME280
 #define HEADER_BME280
 
+#include <stdint.h>
+
 #define  CTRL_HUMIDITY		0xF2 //Ctrl Humidity
 #define  STAT				0xF3 //Status
 #define  CTRL_MEAS			0xF4 //Ctrl Measure

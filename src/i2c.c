@@ -29,6 +29,15 @@ static uint8_t I2C_rx_buffer[rx_Buffer_size];
 
 I2C_TransferSeq_TypeDef i2c_transfer;
 
+I2C_Init_TypeDef i2c_init =
+		{                                                                         				\
+		  true,                    /* Enable when init done */                    				\
+		  true,                    /* Set to master mode */                       				\
+		  0,                       /* Use currently configured reference clock */ 				\
+		  I2C_FREQ_STANDARD_MAX,   /* Set to standard rate assuring being within I2C spec */    \
+		  i2cClockHLRStandard      /* Set to use 4:4 low/high duty cycle */       				\
+		};
+
 typedef enum
 {
 	I2C_zero = 0,
@@ -53,15 +62,6 @@ unsigned int i2c_init_fn(void)
 	CMU_ClockEnable(cmuClock_I2C0, true);
 	CMU_ClockEnable(cmuClock_I2C1, true);
 
-	I2C_Init_TypeDef i2c_init =
-			{                                                                         				\
-			  true,                    /* Enable when init done */                    				\
-			  true,                    /* Set to master mode */                       				\
-			  0,                       /* Use currently configured reference clock */ 				\
-			  I2C_FREQ_STANDARD_MAX,   /* Set to standard rate assuring being within I2C spec */    \
-			  i2cClockHLRStandard      /* Set to use 4:4 low/high duty cycle */       				\
-			};
-
 	I2C_IntClear(I2C1, I2C_IEN_ADDR | I2C_IEN_RXDATAV | I2C_IEN_SSTOP);
 	I2C_IntClear(I2C0, I2C_IEN_ADDR | I2C_IEN_RXDATAV | I2C_IEN_SSTOP);
 
@@ -80,7 +80,7 @@ unsigned int i2c_init_fn(void)
 	I2C_tx_start = false;
 	I2C_rx_buffer_index = 0;
 
-	I2C1->SADDR = BME280_I2C_ADDR;
+	I2C1->SADDR = APDS9960_I2C_ADDR;
 	I2C1->CTRL |= I2C_CTRL_SLAVE | I2C_CTRL_AUTOACK | I2C_CTRL_AUTOSN | I2C_CTRL_EN;
 
 	I2C0->SADDR = LSM303C_ACC_I2C_ADDR;
@@ -188,14 +188,15 @@ void i2c_buffer_fill(uint8_t buffer[], uint8_t rd_wr, uint8_t size, uint8_t I2C_
 	else if(I2C_periph_flag == 3)
 	{
 		I2C1->SADDR = BME280_I2C_ADDR;
-		I2C1->ROUTE = I2C_ROUTE_SDAPEN | I2C_ROUTE_SCLPEN | (0 << _I2C_ROUTE_LOCATION_SHIFT);
+		//I2C1->ROUTE = I2C_ROUTE_SDAPEN | I2C_ROUTE_SCLPEN | (1 << _I2C_ROUTE_LOCATION_SHIFT);
 		i2c_transfer.addr = BME280_I2C_ADDR;
+		//I2C_Init(I2C1, &i2c_init);
 		I2Cn_num = I2C_one;
 	}
 	else if(I2C_periph_flag == 4)
 	{
 		I2C1->SADDR = APDS9960_I2C_ADDR;
-		I2C1->ROUTE = I2C_ROUTE_SDAPEN | I2C_ROUTE_SCLPEN | (1 << _I2C_ROUTE_LOCATION_SHIFT);
+		//I2C1->ROUTE = I2C_ROUTE_SDAPEN | I2C_ROUTE_SCLPEN | (0 << _I2C_ROUTE_LOCATION_SHIFT);
 		i2c_transfer.addr = APDS9960_I2C_ADDR;
 		I2Cn_num = I2C_one;
 	}

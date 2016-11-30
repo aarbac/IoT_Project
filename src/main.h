@@ -5,7 +5,7 @@
 
 #define ENERGY_MODE EM2 //Used to switch to any Energy Mode
 
-#define TESTS_ON
+//#define TESTS_ON
 
 #define LSM303C_ACC_I2C_FLAG	1
 #define LSM303C_MAG_I2C_FLAG	2
@@ -15,7 +15,7 @@
 
 #define LSM303C_ACC_I2C_ADDR	0x1D << 1
 #define LSM303C_MAG_I2C_ADDR	0x1E << 1
-#define BME280_I2C_ADDR			0x77 << 1
+#define BME280_I2C_ADDR			0x76 << 1
 #define APDS9960_I2C_ADDR		0x39 << 1
 //#define READ_SENSOR_ADC_BUFFERS
 
@@ -93,11 +93,15 @@ typedef enum
 #define I2C0_SCL_pin_number 	7			//SCL pin
 #define I2C0_SDA_pin_number		6			//SDA pin
 
-#define I2C1_port 				gpioPortC	//I2C1 port
-#define I2C1_SCL_pin_number 	5			//SCL pin
-#define I2C1_SDA_pin_number		4			//SDA pin
+#define I2C1_loc0_port 				gpioPortC	//I2C1 port
+#define I2C1_loc0_SCL_pin_number 	5			//SCL pin
+#define I2C1_loc0_SDA_pin_number	4			//SDA pin
 #define I2C1_RX_Buffer_Size		1			//Receive Buffer size
-#define I2C1_Slave_Address 		0x39 << 1	//Slave address
+//#define I2C1_Slave_Address 		0x39 << 1	//Slave address
+
+#define I2C1_loc1_port 				gpioPortB	//I2C1 port
+#define I2C1_loc1_SCL_pin_number 	12			//SCL pin
+#define I2C1_loc1_SDA_pin_number	11			//SDA pin
 
 #define I2C_Power_port		gpioPortD	//GPIO port used for I2C
 #define I2C_Power_pin		0			//Power GPIO pin

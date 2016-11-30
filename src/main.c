@@ -47,12 +47,14 @@
 #include "adc.h"
 #include "dma.h"
 #include "i2c.h"
-#include "tsl2651.h"
 #include "leuart.h"
 #include "LCD.h"
 #include "captouch.h"
 #include "tests.h"
 #include "LSM303C.h"
+#include "BME280.h"
+#include "calibration.h"
+#include "gesture.h"
 
 extern unsigned int test_flag;
 
@@ -62,6 +64,7 @@ extern unsigned int test_flag;
 int main(void)
 {
 	unsigned int err_code;
+	float x=0;
 	/* Chip errata */
 	CHIP_Init();
 	BlockSleepMode(EM3);
@@ -131,9 +134,14 @@ int main(void)
 	}
 #endif
 
+	//calibrate();
+	writeBME280_settings();
+	//x=read_temperature();
+ 	writeAPDS9960_settings();
 	/* Infinite loop */
 	while (1)
 	{
+
 		sleep();
 	}
 }

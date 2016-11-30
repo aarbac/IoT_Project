@@ -58,8 +58,8 @@ src/LETimer.o: ../src/LETimer.c ../src/sleep.h ../src/LETimer.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_bus.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_assert.h \
  ../src/SiLabs_errcodes.h ../src/acmp.h ../src/clock.h ../src/main.h \
- ../src/dma.h ../src/i2c.h ../src/tsl2651.h ../src/leuart.h \
- ../src/captouch.h ../src/LCD.h ../src/rtc.h \
+ ../src/dma.h ../src/i2c.h ../src/leuart.h ../src/captouch.h ../src/LCD.h \
+ ../src/rtc.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_cmu.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_emu.h \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_int.h \
@@ -204,8 +204,6 @@ C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/emlib/inc/em_assert.h
 ../src/dma.h:
 
 ../src/i2c.h:
-
-../src/tsl2651.h:
 
 ../src/leuart.h:
 

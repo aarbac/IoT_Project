@@ -73,8 +73,9 @@ src/main.o: ../src/main.c \
  C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/drivers/dmactrl.h \
  ../src/sleep.h ../src/LETimer.h ../src/GPIO.h ../src/SiLabs_errcodes.h \
  ../src/acmp.h ../src/clock.h ../src/main.h ../src/adc.h ../src/dma.h \
- ../src/i2c.h ../src/tsl2651.h ../src/leuart.h ../src/LCD.h \
- ../src/captouch.h ../src/tests.h
+ ../src/i2c.h ../src/leuart.h ../src/LCD.h ../src/captouch.h \
+ ../src/tests.h ../src/LSM303C.h ../src/BME280.h ../src/calibration.h \
+ ../src/gesture.h
 
 C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/Device/SiliconLabs/EFM32LG/Include/em_device.h:
 
@@ -240,8 +241,6 @@ C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/drivers/d
 
 ../src/i2c.h:
 
-../src/tsl2651.h:
-
 ../src/leuart.h:
 
 ../src/LCD.h:
@@ -249,3 +248,11 @@ C:/SiliconLabs/SimplicityStudio/v3/developer/sdks/efm32/v2/kits/common/drivers/d
 ../src/captouch.h:
 
 ../src/tests.h:
+
+../src/LSM303C.h:
+
+../src/BME280.h:
+
+../src/calibration.h:
+
+../src/gesture.h:

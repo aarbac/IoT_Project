@@ -5,7 +5,7 @@
 static uint8_t reg_I2C_tx_buffer_write[2] = {0,0};
 static uint8_t reg_I2C_tx_buffer_read[1] = {0};
 
-int8_t valueread(uint8_t value)
+int8_t valueread1(uint8_t value)
 {
 reg_I2C_tx_buffer_read[0] = value;
 i2c_buffer_fill(reg_I2C_tx_buffer_read, 0, 1, APDS9960_I2C_FLAG);
@@ -13,7 +13,7 @@ int8_t readdata=i2c_buffer_read();
 return readdata;
 }
 
-proxdata=valueread(REG_PDATA); //refer page 12,17 and 33 to clear interrupts of gesture and proximity
+//proxdata=valueread1(REG_PDATA); //refer page 12,17 and 33 to clear interrupts of gesture and proximity
 
 void writeAPDS9960_settings()
 {
