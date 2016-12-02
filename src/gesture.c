@@ -443,11 +443,9 @@ void processgesture()
 
 void delay(uint8_t x)
 {
-	   int c = 1, d = 1;
-
-	   for ( c = 1 ; c <= x*x ; c++ )
-	       for ( d = 1 ; d <= x*x ; d++ )
-	       {}
+	   int c = 0;
+	   for ( c = 0 ; c < x*x ; c++ )
+	   {;}
 }
 
 uint8_t readgesture()
