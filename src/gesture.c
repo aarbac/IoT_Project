@@ -19,7 +19,7 @@ struct gesture_data {
 
 void GPIO_EVEN_IRQHandler(void)
 {
-uint8_t val=readgesture();
+	uint8_t val=readgesture();
 }
 
 void gpio_interrupt_enable()
