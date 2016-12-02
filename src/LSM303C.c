@@ -172,16 +172,7 @@ void LSM303C_init(void)
 	Acc_set_blockdataupdate(ACC_BDU_ENABLE);
 	Acc_set_enable_axis(ACC_X_ENABLE | ACC_Y_ENABLE | ACC_Z_ENABLE);
 	Acc_set_odr(ACC_ODR_100_Hz);
-}
-
-void LSM303C_enable(void)
-{
-
-}
-
-void LSM303C_disable(void)
-{
-
+	enable_LSM303C_interrupts();
 }
 
 int LSM303C_test(void)
@@ -252,6 +243,18 @@ int LSM303C_GetMagntStatus()
 	int status;
 	status = LSM303C_read_reg(MAG_STATUS, MAG);
 	return status;
+}
+
+void enable_LSM303C_interrupts(void)
+{
+	uint8_t val = 0xEF;
+	LSM303C_write_reg(MAG_INT_CFG, val, MAG);
+	//The interrupt will be cleared when MAG_INT_SRC is read
+
+	val = 0x00;
+	LSM303C_write_reg(MAG_INT_THS_L, val, MAG);
+	val = 0x01;
+	LSM303C_write_reg(MAG_INT_THS_H, val, MAG);
 }
 
 
