@@ -26,16 +26,6 @@ void RTC_IRQHandler( void )
 	/* Clear interrupt flag */
 	RTC_IntClear(RTC_IFS_COMP0);
 
-	if(temp)
-	{
-	  LESENSE_IntEnable(captouch_interrupt_flags);
-	  temp = 0;
-	}
-	else if(temp == 0)
-	{
-
-	}
-
 	if(test_flag == 1)
 	{
 #ifdef TESTS_ON

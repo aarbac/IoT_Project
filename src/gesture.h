@@ -53,6 +53,7 @@
 
 /*Default Values*/
 
+#define ATIME			219
 #define WTIME           0xFF     // 27ms
 #define PROX_PPULSE     0x87    // 16us, 8 pulses
 #define GESTURE_PPULSE  0x89    // 16us, 10 pulses
@@ -63,8 +64,10 @@
 #define AGAIN           1
 #define PILT            0       // Low proximity threshold
 #define PIHT            50      // High proximity threshold
-#define PERS            0x11    // 2 consecutive prox or ALS for int.
-#define CONFIG2         3    // No saturation interrupts or LED boost
+#define AILT            0xFFFF  // Force interrupt for calibration
+#define AIHT            0
+#define PERS            0xA1    // 2 consecutive prox or ALS for int.
+#define CONFIG2         0x01    // No saturation interrupts or LED boost
 #define CONFIG3         0       // Enable all photodiodes, no SAI
 #define GPENTH          40      // Threshold for entering gesture mode
 #define GEXTH           30      // Threshold for exiting gesture mode
@@ -75,8 +78,33 @@
 #define GOFFSET         0       // No offset scaling for gesture mode
 #define GPULSE          0xC9    // 32us, 10 pulses
 #define GCONF3          0       // All photodiodes active during gesture
-#define GIEN            1        // Disable gesture interrupts
+#define GIEN            0        // Disable gesture interrupts
 
+#define GVALID         0b00000001
+#define FIFO_TIME		30
+
+#define GESTURE_SENSITIVITY 50
+#define GESTURE_THRESHOLD 10
+void GPIO_ODD_IRQHandler(void);
+void gpio_interrupt_enable();
 uint8_t valueread1(uint8_t value);
 void writeAPDS9960_settings();
+void processgesture();
+void decodegesture();
+void delay(uint8_t x);
+uint8_t readgesture();
+
+enum {
+  LEFT,
+  RIGHT,
+  UP,
+  DOWN,
+  NONE,
+};
+
+int gesture_ud_d;
+int gesture_lr_d;
+int gesture_ud_c;
+int gesture_lr_c;
+int gesture_motion;
 #endif

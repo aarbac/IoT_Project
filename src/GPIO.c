@@ -54,6 +54,7 @@ unsigned int GPIO_Init(sleepstatemode_enum EMx)
 	GPIO_PinModeSet(LEUART0_port, LEUART0_TX_pin_number, gpioModePushPull, 1);
 	GPIO_PinModeSet(LEUART0_port, LEUART0_RX_pin_number, gpioModePushPull, 1);
 
+	GPIO_PinModeSet(gpioPortC,6, gpioModeInput, 1);
 	return SILABS_SUCCESS;
 }
 

@@ -56,6 +56,7 @@
 #include "calibration.h"
 #include "gesture.h"
 
+
 extern unsigned int test_flag;
 
 /******************************************************************************
@@ -84,7 +85,7 @@ int main(void)
 		err_code = ACMP_Init_fn();
 #endif
 		LCD_init_fn();
-		//capsense_main();
+		capsense_main();
 		err_code = i2c_init_fn();
 		err_code = adc_init_fn();
 		err_code = dma_init_fn();
@@ -98,15 +99,15 @@ int main(void)
 #ifdef ENABLE_ON_BOARD_LIGHT_SENSOR
 		err_code = ACMP_Init_fn();
 #endif
-		//capsense_main();
+		capsense_main();
 		err_code = i2c_init_fn();
 		err_code = adc_init_fn();
 		err_code = dma_init_fn();
 		LSM303C_init();
 		err_code = LSM303C_test();
 		LSM303C_GetAccelData();
-		//err_code = leuart_init_fn();
-		//err_code = LETimer0_Init(ENERGY_MODE);
+		err_code = leuart_init_fn();
+		err_code = LETimer0_Init(ENERGY_MODE);
 	}
 
 #ifdef TESTS_ON
@@ -133,14 +134,15 @@ int main(void)
 		test_flag = 0;
 	}
 #endif
-
-	/*calibrate();
+	gpio_interrupt_enable();
+	calibrate();
 	writeBME280_settings();
 	x=read_temperature();
 	x=read_humidity();
-	x=read_pressure();*/
-	//x=read_altitude();
+	x=read_pressure();
+	x=read_altitude();
  	writeAPDS9960_settings();
+
 	/* Infinite loop */
 	while (1)
 	{

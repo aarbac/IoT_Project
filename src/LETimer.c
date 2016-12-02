@@ -33,7 +33,7 @@ unsigned int led_flag = 0;
 unsigned int energymode_flag = 0;
 unsigned int cap_flag = 0;
 extern unsigned int captouch_interrupt_flags;
-
+uint8_t sec_value_flag=1;
 /*
  * @brief ACMP_zero structure which will be used to change the VDD scaling factor
  */
@@ -299,6 +299,7 @@ void LETIMER0_IRQHandler(void)
 		UnBlockSleepMode(EM1);
 #endif
 	}
+	sec_value_flag=0;
 	INT_Enable();
 }
 
@@ -485,6 +486,8 @@ void LESENSE_IRQHandler( void )
 	uint8_t channel, i, valid_touch;
 	uint32_t interrupt_flags, tmp, channels_enabled;
 	uint16_t threshold_value;
+	static uint16_t sec_value=0;
+
 
 	count++;
 	if(count == 3)
@@ -564,18 +567,20 @@ void LESENSE_IRQHandler( void )
 	}
 
 	channels_touched = buttons_pressed;
-
-	if(channels_touched)
+	sec_value=channels_touched;
+	if(sec_value>1024)
 	{
-		GPIO_on_off(0, LED_pin_port, LED0_pin_number);
-		//LCD_write_string("CAP_ON");
+		//GPIO_on_off(0, LED_pin_port, LED0_pin_number);
+		LCD_write_string("Sec ON");
+		sec_value_flag=1;
 		//flag_cap = 1;
 		//send_status(channels_touched);
 		//RTC_CounterReset();
 	}
-	else
+	else if(sec_value<1024 && sec_value_flag==0)
 	{
 		GPIO_on_off(1, LED_pin_port, LED0_pin_number);
+		LCD_write_string("Sec OFF");
 		//LCD_write_string(" ");
 		//flag_cap = 0;
 		//LESENSE_IntEnable(LESENSE->IEN);

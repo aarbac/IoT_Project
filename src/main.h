@@ -111,4 +111,7 @@ typedef enum
 #define LEUART0_TX_pin_number	4
 #define LEUART0_RX_pin_number	5
 
+//captouch
+#define LED_PORT gpioPortE
+#define LED_PIN  2
 #endif
