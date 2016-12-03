@@ -89,7 +89,7 @@ void GPIO_ODD_IRQHandler(void);
 void gpio_interrupt_enable();
 uint8_t valueread1(uint8_t value);
 void writeAPDS9960_settings();
-void processgesture();
+bool processgesture();
 void decodegesture();
 void delay(uint8_t x);
 uint8_t readgesture();

@@ -1,3 +1,7 @@
+#include <stdlib.h>
+#include <math.h>
+#include <stdbool.h>
+
 #include "i2c.h"
 #include "gesture.h"
 #include "main.h"
@@ -346,7 +350,7 @@ void decodegesture()
 }
 
 
-void processgesture()
+bool processgesture()
 {
     uint8_t ufirst = 0;
     uint8_t dfirst = 0;
@@ -364,6 +368,12 @@ void processgesture()
     int lr_d;
     int i;
 
+    if( gesture_data.total <= 4 )
+    {
+            return false;
+    }
+    if( (gesture_data.total<= 32) && (gesture_data.total> 0) )
+    {
         /* Find the first value in U/D/L/R above the threshold */
         for(i=0;i<gesture_data.total;i++ )
         {
@@ -378,6 +388,11 @@ void processgesture()
                 rfirst = gesture_data.rdata[i];
                 break;
             }
+        }
+
+        if( (ufirst == 0) || (dfirst == 0) || (lfirst == 0) || (rfirst == 0) )
+        {
+                    return false;
         }
 
         /* Find the last value in U/D/L/R above the threshold */
@@ -396,16 +411,16 @@ void processgesture()
                 break;
             }
         }
-
+    }
     /* Calculate the first vs. last ratio of up/down and left/right */
-    udratio_first = ((ufirst - dfirst) * 100) / (ufirst + dfirst);
-    lrratio_first = ((lfirst - rfirst) * 100) / (lfirst + rfirst);
-    udratio_last = ((ulast - dlast) * 100) / (ulast + dlast);
-    lrratio_last = ((llast - rlast) * 100) / (llast + rlast);
+    udratio_first = (int)(((ufirst - dfirst) * 100) / (ufirst + dfirst));
+    lrratio_first = (int)((lfirst - rfirst) * 100) / (lfirst + rfirst);
+    udratio_last = (int)((ulast - dlast) * 100) / (ulast + dlast);
+    lrratio_last = (int)((llast - rlast) * 100) / (llast + rlast);
 
     /* Determine the difference between the first and last ratios */
-    ud_d = udratio_last - udratio_first;
-    lr_d = lrratio_last - lrratio_first;
+    ud_d = (int)(udratio_last - udratio_first);
+    lr_d = (int)(lrratio_last - lrratio_first);
 
     /* Accumulate the UD and LR delta values */
     gesture_ud_d += ud_d;
@@ -453,7 +468,8 @@ uint8_t readgesture()
     uint8_t fifosize = 0;
     uint8_t fifodata[128];
     uint8_t gstatus;
-    int i,j;
+    static uint8_t q = 1;
+    int i;
 
     while(1)
     {
@@ -464,13 +480,13 @@ uint8_t readgesture()
     		fifosize=valueread1(REG_GFLVL);
 			for(i = 0; i < fifosize*4; i+=4)
 			{
-			fifodata[i]=valueread1(REG_GFIFO_U);
-			fifodata[i+1]=valueread1(REG_GFIFO_D);
-			fifodata[i+2]=valueread1(REG_GFIFO_L);
-			fifodata[i+3]=valueread1(REG_GFIFO_R);
+				fifodata[i]=valueread1(REG_GFIFO_U);
+				fifodata[i+1]=valueread1(REG_GFIFO_D);
+				fifodata[i+2]=valueread1(REG_GFIFO_L);
+				fifodata[i+3]=valueread1(REG_GFIFO_R);
 			}
 
-			for(i=0;i<fifosize*4;i+=4)
+			for(i=0; i<fifosize*4; i+=4)
 			{
 				gesture_data.udata[gesture_data.index] = fifodata[i + 0];
 				gesture_data.ddata[gesture_data.index] = fifodata[i + 1];
@@ -479,25 +495,27 @@ uint8_t readgesture()
 				gesture_data.index++;
 				gesture_data.total++;
 			}
+
 			processgesture();
 			decodegesture();
 			gesture_data.index = 0;
 			gesture_data.total = 0;
+
     	}
     	else
     	{
-		/* Filter and process gesture data. Decode near/far state */
-    	delay(FIFO_TIME);
-		decodegesture();
-		/* Reset data */
-		gesture_data.index = 0;
-		gesture_data.total = 0;
-		gesture_ud_d = 0;
-		gesture_lr_d = 0;
-		gesture_ud_c = 0;
-		gesture_lr_c = 0;
-		gesture_motion = NONE;
-		return 1;
+			/* Filter and p rocess gesture data. Decode near/far state */
+			delay(FIFO_TIME);
+			decodegesture();
+			/* Reset data */
+			gesture_data.index = 0;
+			gesture_data.total = 0;
+			gesture_ud_d = 0;
+			gesture_lr_d = 0;
+			gesture_ud_c = 0;
+			gesture_lr_c = 0;
+			gesture_motion = NONE;
+			return 1;
     	}
     }
 }
