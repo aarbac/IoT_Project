@@ -23,6 +23,8 @@
 
 //#define LEUART_TEST_ON
 
+#define DMA_LEUART0_CHANNEL		0
+
 #define DMA_ON
 
 #ifndef DMA_ON

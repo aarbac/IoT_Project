@@ -7,8 +7,14 @@
 #include "SiLabs_errcodes.h"
 #include "sleep.h"
 #include "main.h"
+#include "circbuffer.h"
 
 DMA_CB_TypeDef ADC_callback;
+
+DMA_CB_TypeDef dma_leuart0_callback[1];
+
+uint8_t x_space[32];
+circBuf_t cb = { x_space,0,0,32};
 
 /*
  * @disclaimer: This routine belongs to SILABS IP.
@@ -112,6 +118,63 @@ unsigned int dma_init_fn(void)
 	DMA_CfgDescr(DMA_ADC_CHANNEL, true, &descrCfg);
 #endif
 	return SILABS_SUCCESS;
+}
+
+void sendUartCircBuff()
+{
+	uint8_t sendBuffer[3];
+	//LEUART_Tx(LEUART0, remove_element);
+	//cbuffer_remove(&tx_buffer, &sendBuffer[0]);
+	//cbuffer_remove(&tx_buffer, &sendBuffer[1]);
+	//cbuffer_remove(&tx_buffer, &sendBuffer[2]);
+
+ 	circBufPop(&cb, &sendBuffer[0]);
+
+	//flagForUart = 0;
+	dmaControlBlock->SRCEND = sendBuffer+3-1;
+	/* Enable DMA wake-up from LEUART1 TX */
+	LEUART0->CTRL = LEUART_CTRL_TXDMAWU;
+
+	/* (Re)starting the transfer. Using Basic Mode */
+	DMA_ActivateBasic(DMA_LEUART0_CHANNEL, true, false, NULL, NULL,(3 - 1));
+}
+
+void leuart0_DMAtransferComplete(unsigned int channel, bool primary, void *user)
+{
+	(void) channel;
+	(void) primary;
+	(void) user;
+
+	/* Disable DMA wake-up from LEUART0 TX */
+	LEUART0->CTRL &= ~LEUART_CTRL_TXDMAWU;
+}
+
+void dma_leuart0_init()
+{
+	dma_leuart0_callback[DMA_LEUART0_CHANNEL].cbFunc = leuart0_DMAtransferComplete;
+	dma_leuart0_callback[DMA_LEUART0_CHANNEL].userPtr = NULL;
+	dma_leuart0_callback[DMA_LEUART0_CHANNEL].primary = true;
+
+	DMA_CfgChannel_TypeDef  dmachnlCfg;
+	// Setting up channel
+	dmachnlCfg.highPri   = true;                 				// Default priority
+	dmachnlCfg.enableInt = true;                 			 // interrupt shall be enabled for channel
+	dmachnlCfg.select    = DMAREQ_LEUART0_RXDATAV;  	// DMA channel select for ADC0_SINGLE
+	dmachnlCfg.cb        = &dma_leuart0_callback[DMA_LEUART0_CHANNEL];               		// Associating the call back function with DMA channel
+
+	DMA_CfgChannel(0, &dmachnlCfg);
+	DMA_CfgDescr_TypeDef    dmadescrCfg;
+
+	// Setting up channel descriptor
+	dmadescrCfg.dstInc  = dmaDataIncNone;      // destination address: 2 bytes
+	dmadescrCfg.srcInc  = dmaDataInc1;      // Source address:
+	dmadescrCfg.size    = dmaDataSize1;        // data size: 2 bytes
+	dmadescrCfg.arbRate = dmaArbitrate1;     //arbitrate:  set to zero
+	dmadescrCfg.hprot   = 0;
+	DMA_CfgDescr(DMA_LEUART0_CHANNEL, true, &dmadescrCfg);
+
+	/* Set new DMA destination address directly in the DMA descriptor */
+	dmaControlBlock->DSTEND = &LEUART0->TXDATA;
 }
 
 
