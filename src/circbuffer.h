@@ -2,7 +2,7 @@
 #define HEADER_CIRCBUFFER
 
 //Circular Buffer Instantiation
-#define CIRCBUF_DEF(x,y) uint8_t x_space[y]; circBuf_t x = { x_space,0,0,y}
+#define CIRCBUF_DEF(x,y) extern uint8_t x_space[y]; circBuf_t x = { x_space,0,0,y}
 
 typedef struct
 {
