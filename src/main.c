@@ -55,9 +55,14 @@
 #include "BME280.h"
 #include "calibration.h"
 #include "gesture.h"
-
+#include "circbuffer.h"
 
 extern unsigned int test_flag;
+
+extern circBuf_t cb;
+
+uint8_t array[32];
+uint8_t * ptr;
 
 /******************************************************************************
  * @brief  Main function
@@ -109,6 +114,12 @@ int main(void)
 		err_code = leuart_init_fn();
 		err_code = LETimer0_Init(ENERGY_MODE);
 	}
+
+ 	for(int i = 0; i < 15; i++)
+ 	{
+ 		circBufPush(&cb, i);
+ 	}
+
 
 #ifdef TESTS_ON
 	test_flag = 1;
