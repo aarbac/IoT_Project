@@ -63,7 +63,7 @@ extern unsigned int test_flag;
  * @brief  Main function
  *****************************************************************************/
 int main(void)
-{
+ {
 	unsigned int err_code;
 	float x=0;
 	/* Chip errata */

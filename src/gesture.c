@@ -23,7 +23,7 @@ struct gesture_data {
 
 void GPIO_EVEN_IRQHandler(void)
 {
-	uint8_t val=readgesture();
+	readgesture();
 }
 
 void gpio_interrupt_enable()
@@ -41,7 +41,6 @@ uint8_t valueread1(uint8_t value)
 	return readdata;
 }
 
-//proxdata=valueread1(REG_PDATA); //refer page 12,17 and 33 to clear interrupts of gesture and proximity
 
 void writeAPDS9960_settings()
 {
@@ -274,8 +273,20 @@ void writeAPDS9960_settings()
 	i2c_buffer_fill(reg_I2C_tx_buffer_write, 1, 2, APDS9960_I2C_FLAG);
 }
 
-void decodegesture()
+bool decodegesture()
 {
+	if( gesture_state == NEAR_STATE )
+		{
+	        gesture_motion = NEAR;
+	        LCD_write_string("NEAR");
+	        return true;
+	    }
+	else if ( gesture_state == FAR_STATE )
+	    {
+	        gesture_motion = FAR;
+	        LCD_write_string("FAR");
+	        return true;
+	    }
     /* Determine swipe direction */
     if( (gesture_ud_c == -1) && (gesture_lr_c == 0) )
     {
@@ -347,6 +358,11 @@ void decodegesture()
             LCD_write_string("RIGHT");
         }
     }
+    else
+    {
+            return false;
+    }
+    return true;
 }
 
 
@@ -372,6 +388,7 @@ bool processgesture()
     {
             return false;
     }
+
     if( (gesture_data.total<= 32) && (gesture_data.total> 0) )
     {
         /* Find the first value in U/D/L/R above the threshold */
@@ -413,14 +430,14 @@ bool processgesture()
         }
     }
     /* Calculate the first vs. last ratio of up/down and left/right */
-    udratio_first = (int)(((ufirst - dfirst) * 100) / (ufirst + dfirst));
-    lrratio_first = (int)((lfirst - rfirst) * 100) / (lfirst + rfirst);
-    udratio_last = (int)((ulast - dlast) * 100) / (ulast + dlast);
-    lrratio_last = (int)((llast - rlast) * 100) / (llast + rlast);
+    udratio_first = (((ufirst - dfirst) * 100) / (ufirst + dfirst));
+    lrratio_first = ((lfirst - rfirst) * 100) / (lfirst + rfirst);
+    udratio_last = ((ulast - dlast) * 100) / (ulast + dlast);
+    lrratio_last = ((llast - rlast) * 100) / (llast + rlast);
 
     /* Determine the difference between the first and last ratios */
-    ud_d = (int)(udratio_last - udratio_first);
-    lr_d = (int)(lrratio_last - lrratio_first);
+    ud_d = (udratio_last - udratio_first);
+    lr_d = (lrratio_last - lrratio_first);
 
     /* Accumulate the UD and LR delta values */
     gesture_ud_d += ud_d;
@@ -454,6 +471,42 @@ bool processgesture()
         gesture_lr_c = 0;
     }
 
+    if( (gesture_ud_c == 0) && (gesture_lr_c == 0) ) {
+            if( (abs(ud_d) < GESTURE_SENSITIVITY_2) && \
+                (abs(lr_d) < GESTURE_SENSITIVITY_2) ) {
+
+                if( (ud_d == 0) && (lr_d == 0) ) {
+                    gesture_near_count++;
+                } else if( (ud_d != 0) || (lr_d != 0) ) {
+                    gesture_far_count++;
+                }
+
+                if( (gesture_near_count >= 10) && (gesture_far_count >= 2) ) {
+                    if( (ud_d == 0) && (lr_d == 0) ) {
+                        gesture_state = NEAR_STATE;
+                    } else if( (ud_d != 0) && (lr_d != 0) ) {
+                        gesture_state = FAR_STATE;
+                    }
+                    return true;
+                }
+            }
+        } else {
+            if( (abs(ud_d) < GESTURE_SENSITIVITY_2) && \
+                (abs(lr_d) < GESTURE_SENSITIVITY_2) ) {
+
+                if( (ud_d == 0) && (lr_d == 0) ) {
+                    gesture_near_count++;
+                }
+
+                if( gesture_near_count >= 10 ) {
+                    gesture_ud_c = 0;
+                    gesture_lr_c = 0;
+                    gesture_ud_d = 0;
+                    gesture_lr_d  = 0;
+                }
+            }
+        }
+return false;
 }
 
 void delay(uint8_t x)
@@ -463,12 +516,11 @@ void delay(uint8_t x)
 	   {;}
 }
 
-uint8_t readgesture()
+int readgesture()
 {
     uint8_t fifosize = 0;
     uint8_t fifodata[128];
     uint8_t gstatus;
-    static uint8_t q = 1;
     int i;
 
     while(1)
@@ -478,30 +530,41 @@ uint8_t readgesture()
     	if( ( gstatus& GVALID) == GVALID )
     	{
     		fifosize=valueread1(REG_GFLVL);
+
+    		if (fifosize>4)
+    	{
 			for(i = 0; i < fifosize*4; i+=4)
 			{
-				fifodata[i]=valueread1(REG_GFIFO_U);
-				fifodata[i+1]=valueread1(REG_GFIFO_D);
-				fifodata[i+2]=valueread1(REG_GFIFO_L);
-				fifodata[i+3]=valueread1(REG_GFIFO_R);
+				fifodata[i]=(uint8_t)(valueread1(REG_GFIFO_U));
+				fifodata[i+1]=(uint8_t)(valueread1(REG_GFIFO_D));
+				fifodata[i+2]=(uint8_t)(valueread1(REG_GFIFO_L));
+				fifodata[i+3]=(uint8_t)(valueread1(REG_GFIFO_R));
 			}
 
-			for(i=0; i<fifosize*4; i+=4)
+			if( fifosize >= 4 )
 			{
-				gesture_data.udata[gesture_data.index] = fifodata[i + 0];
-				gesture_data.ddata[gesture_data.index] = fifodata[i + 1];
-				gesture_data.ldata[gesture_data.index] = fifodata[i + 2];
-				gesture_data.rdata[gesture_data.index] = fifodata[i + 3];
-				gesture_data.index++;
-				gesture_data.total++;
-			}
+				for(i=0; i<fifosize*4; i+=4)
+					{
+						gesture_data.udata[gesture_data.index] = fifodata[i + 0];
+						gesture_data.ddata[gesture_data.index] = fifodata[i + 1];
+						gesture_data.ldata[gesture_data.index] = fifodata[i + 2];
+						gesture_data.rdata[gesture_data.index] = fifodata[i + 3];
+						gesture_data.index++;
+						gesture_data.total++;
+					}
 
-			processgesture();
-			decodegesture();
+			if(processgesture())
+			{
+				if(decodegesture())
+				{
+
+				}
+			}
 			gesture_data.index = 0;
 			gesture_data.total = 0;
-
+			}
     	}
+    }
     	else
     	{
 			/* Filter and p rocess gesture data. Decode near/far state */

@@ -84,22 +84,33 @@
 #define FIFO_TIME		30
 
 #define GESTURE_SENSITIVITY 50
+#define GESTURE_SENSITIVITY_2 20
 #define GESTURE_THRESHOLD 10
 void GPIO_ODD_IRQHandler(void);
 void gpio_interrupt_enable();
 uint8_t valueread1(uint8_t value);
 void writeAPDS9960_settings();
 bool processgesture();
-void decodegesture();
+bool decodegesture();
 void delay(uint8_t x);
-uint8_t readgesture();
+int readgesture();
 
 enum {
+	NONE,
   LEFT,
   RIGHT,
   UP,
   DOWN,
-  NONE,
+  NEAR,
+  FAR,
+  ALL
+};
+
+enum {
+  NA_STATE,
+  NEAR_STATE,
+  FAR_STATE,
+  ALL_STATE
 };
 
 int gesture_ud_d;
@@ -107,4 +118,7 @@ int gesture_lr_d;
 int gesture_ud_c;
 int gesture_lr_c;
 int gesture_motion;
+int gesture_near_count;
+int gesture_far_count;
+int gesture_state;
 #endif
